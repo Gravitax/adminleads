@@ -1,0 +1,15 @@
+form {
+	display: flex; justify-content: center; align-items: center; flex-direction: column;
+	background: var(--lightBlue);
+	width: fit-content;
+	padding: 30px; margin: auto; margin-top: 15vw;
+	border: 1px solid black; border-radius: 20px;
+}
+
+.my_input {
+	display: flex; justify-content: center; align-items: center; flex-direction: column;
+}
+
+.my_input > input, .my_input > select { width: 300px; height: 30px; margin: 10px 0; }
+
+.error_message { font-size: 12px; color: red; margin-bottom: 10px; }

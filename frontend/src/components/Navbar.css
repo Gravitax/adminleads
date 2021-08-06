@@ -1,0 +1,37 @@
+.navbar {
+	width: 100%; height: var(--navbarHeight);
+	display: flex; align-items: center; justify-content: space-around;
+	font-size: 21px;
+	background: var(--lightBlue);
+}
+
+.navbar a, .navbar span {
+	cursor: pointer;
+	font-weight: bold;
+	color: #fff;
+	text-decoration: none;
+}
+
+.navbar a.active {
+	color: grey;
+}
+
+.navbar_picto {
+	width: 30px; height: 100%; position: relative;
+	cursor: pointer;
+	background: url("./images/navbar_picto.svg") no-repeat;
+	background-size: contain;
+	background-position: center;
+}
+
+.navbar_picto > .navbar_collapse {
+	max-height: 0; overflow: hidden;
+	position: absolute;
+	left: 50%; bottom: 0;
+	background: var(--lightBlue); color: #fff;
+	transform: translate(-50%, 100%);
+	display: flex; justify-content: center; align-items: center; flex-direction: column;
+	transition: max-height 0.3s ease;
+}
+.navbar .navbar_picto.active > .navbar_collapse { max-height: 100vh; }
+.navbar_picto > .navbar_collapse > * { width: 100%; padding: 20px; text-align: center; }

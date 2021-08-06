@@ -1,0 +1,14 @@
+:root {
+	--navbarHeight: 60px;
+	--blue: #282c34;
+	--lightBlue: #373f4e;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+	margin: 0;
+	padding: 0;
+	font-family: Arial, Helvetica, sans-serif;
+	background: var(--blue); color: #fff; font-size: 21px;
+}
