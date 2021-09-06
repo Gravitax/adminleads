@@ -10,14 +10,15 @@ import "./Register.css";
 
 
 function	Register() {
-	const	[username, setUsername]				= useState("");
-	const	[password, setPassword]				= useState("");
-	const	[registerStatus, setRegisterStatus]	= useState("");
-
 	const	history = useHistory();
 
 	if (check_page_access(false) === false)
 		history.push("/");
+
+
+	const	[username, setUsername]				= useState("");
+	const	[password, setPassword]				= useState("");
+	const	[registerStatus, setRegisterStatus]	= useState("");
 
 	const	userRegister = () => {
 		if (!regex_username(username) || !regex_password(password)) {

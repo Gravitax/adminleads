@@ -4,6 +4,7 @@ const	cors			= require("cors");
 
 const	authRoutes		= require("../routes/auth");
 const	usersRoutes		= require("../routes/users");
+const	leadsRoutes		= require("../routes/leads");
 
 const	app 			= express();
 
@@ -26,6 +27,7 @@ app.use(express.static("../frontend/build"));
 // déclaration des différentes routes de l'API
 app.use("/api/auth", authRoutes);
 app.use("/api/users", usersRoutes);
+app.use("/api/leads", leadsRoutes);
 
 // redirect api path to front path
 app.get("/*", (req, res, next) => {

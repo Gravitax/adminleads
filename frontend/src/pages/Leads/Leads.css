@@ -1,0 +1,23 @@
+.pagination_button {
+	text-align: center;
+	display: block;
+	padding: 15px;
+	width: 110px;
+	margin: 15px 0;
+	cursor: pointer;
+	background: green; color: white;
+}
+
+table, table * {
+	border-collapse: collapse;
+}
+
+table tr, table td, table th {
+	border: 1px solid red;
+	padding: 10px;
+	text-align: left;
+}
+
+table tbody tr:hover {
+	background :green;
+}

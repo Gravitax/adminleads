@@ -1,0 +1,13 @@
+th > div {
+	display: flex;
+	justify-content: space-between;
+}
+
+th > div > span {
+	display: flex;
+	margin-left: 20px;
+}
+
+th > div > span > svg {
+	cursor: pointer;
+}

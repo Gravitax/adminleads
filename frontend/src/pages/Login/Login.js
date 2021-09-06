@@ -8,14 +8,15 @@ import "./Login.css";
 
 
 function	Login() {
-	const	[username, setUsername]			= useState("");
-	const	[password, setPassword]			= useState("");
-	const	[loginStatus, setLoginStatus]	= useState("");
-
 	const	history = useHistory();
 
 	if (check_page_access(false) === false)
 		history.push("/");
+
+	
+	const	[username, setUsername]			= useState("");
+	const	[password, setPassword]			= useState("");
+	const	[loginStatus, setLoginStatus]	= useState("");
 
 	const	userLogin = () => {
 		Axios.post("/api/auth/login", {

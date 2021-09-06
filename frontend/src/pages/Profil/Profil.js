@@ -8,24 +8,24 @@ import "./Profil.css";
 
 
 function	Profil() {
-	const	[status, setStatus]			= useState("");
-	const	[usersList, setUsersList]	= useState([]);
-
 	const	history = useHistory();
 	const	token	= localStorage.getItem("auth_token");
 
 	if (check_page_access(true, 1) === false)
 		history.push("/");
 
+
+	const	[usersList, setUsersList]	= useState([]);
+
 	useEffect(() => {
 		Axios.get("/api/users/read", { params : { token } })
-			.then((response) => { setUsersList(response.data); });
-	}, [token, usersList]);
+			.then((response) => { setUsersList(response.data); console.log(response.data); });
+	}, [token]);
 
 	const	userDelete = (username) => {
 		// faire une demande de confirmation
 		Axios.delete(`/api/users/delete/${username}`, { params : { token } })
-			.then(() => { setStatus(`user: " ${username} " deleted`); });
+			.then(() => { history.push("/profil"); });
 	};
 
 	const	userUpdate = (username) => {
@@ -49,8 +49,6 @@ function	Profil() {
 					);
 				})
 			}
-			<br /><br />
-			<p>{status}</p>
 		</div>
 	);
 }

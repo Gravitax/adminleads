@@ -9,7 +9,7 @@ import Account from "./pages/Account/Account";
 import Leads from "./pages/Leads/Leads";
 import Profil from "./pages/Profil/Profil";
 
-import Navbar from "./components/Navbar";
+import Navbar from "./components/navbar/Navbar";
 
 
 function	App(props) {
