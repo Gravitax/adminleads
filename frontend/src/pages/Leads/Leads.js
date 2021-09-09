@@ -1,93 +1,105 @@
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import Axios from "axios";
-import { v4 as uuidv4 } from "uuid";
 
 import { check_page_access } from "../../modules/functions";
 
-import Datatable from "../../components/datatable/Datatable";
+import DataTableSearch from "../../components/dataTableSearch/DataTableSearch";
+import LeadsForm from "../../components/leadsForm/LeadsForm";
 
 import "./Leads.css";
 
 
+/*
+
+<select class="form-control" name="provenance">
+	<option value="">-</option>
+	<?foreach($dispositifs as $idDispositif => $dispositif){?>
+		<?
+		$selectedProvenance = '';
+		if ($_SESSION['adminleads']['provenance'] == $idDispositif) :
+			$selectedProvenance = ' selected="selected"';
+		endif;
+		?>
+	    <option  <?=$selectedProvenance?> value="<?=$idDispositif?>" ><?=$dispositif?></option>
+	<?}?>
+</select>
+
+while($dispositif = $dispositifsReq->fetch(PDO::FETCH_ASSOC))
+	$dispositifs[$dispositif['id']] = $dispositif['nom'];
+
+----------------------------------------------------------------------------------------------------
+
+<select class="form-control" name="destinataire">
+	<option value="">-</option>
+	<?foreach($destinataires as $idDestinataire => $destinataireTmp){?>
+	    <?
+		$selectedDestinataire = '';
+		if ($_SESSION['adminleads']['destinataire'] == $idDestinataire) :
+				$selectedDestinataire = ' selected="selected"';
+		endif;
+		?>
+	    <option  <?=$selectedDestinataire?> value="<?=$idDestinataire?>" ><?=$destinataireTmp?></option>
+	<?}?>
+</select>
+
+while($destinataireTmp = $destinatairesReq->fetch(PDO::FETCH_ASSOC))
+	$destinataires[$destinataireTmp['id']] = $destinataireTmp['nom'];
+
+*/
+
+
 function	Leads() {
 	const	history	= useHistory();
-	const	token	= localStorage.getItem("auth_token");
 
 	if (check_page_access(true) === false)
 		history.push("/");
 
 
-	const	[leadsList, setLeadsList]			= useState([]);
+	const	[leadsList, setLeadsList]			= useState([]);	
+	const	[destinataires, setDestinataires]	= useState([]);
+	const	[provenances, setProvenances]		= useState([]);
 
-	const	[q, setQ]							= useState("");
-	const	[searchColumns, setSearchColumns]	= useState(["nom", "prenom", "email"]);
+	const	[submit, setSubmit]		= useState(false);
+	const	[subData, setSubData]	= useState([]);
 
 	useEffect(() => {
-		Axios.get(`/api/leads/read`, { params : { token } })
+		Axios.get("/api/leads/readDestinataires")
 			.then((response) => {
-				setLeadsList(response.data);
+				setDestinataires(response.data);
 			});
-	}, [token]);
-
-	function	search(rows) {
-		return (rows.filter((row) => {
-			return (
-				searchColumns.some((column) => {
-					return (row[column] && row[column].toString().toLowerCase().indexOf(q) > -1);
-				})
-			);
-		}));
-	}
-
-	// let	columns = leadsList[0] && Object.keys(leadsList[0]);
+		Axios.get("/api/leads/readProvenances")
+			.then((response) => {
+				setProvenances(response.data);
+			});
+		if (submit) {
+			Axios.get("/api/leads/readQuery", { params : { subData }, })
+				.then((response) => {
+					setLeadsList(response.data);
+				});
+		}
+	}, [submit, subData]);
 
 	return (
 		<div>
-			<br /><br />
 			<h1> LEADS LIST </h1>
 
-			<b> New query: </b>
-			<div>
-				<input type="date" placeholder="DATE START" />
-				<input type="date" placeholder="DATE END" />
-				<input type="text" placeholder="FROM" />
-				<input type="text" placeholder="TO" />
-				<input type="text" placeholder="TYPE" />
-				<button>SUBMIT</button>
-			</div>
-			<br /><br />
+			<LeadsForm
+				onClick={({ ...data }) => {
+					setSubmit(data?.submit);
+					setSubData(data);
+				}}
+				destinataires={destinataires}
+				provenances={provenances}
+			/>
 
-			<b> Search: </b>
-			{
-				<div>
-					<div>
-						<input type="text" value={q} onChange={(e) => { setQ(e.target.value) }} />
-						{/* {
-							columns && columns.map((column) => {
-								return (
-									<label key={uuidv4()}>
-										<input type="checkbox" checked={searchColumns.includes(column)}
-											onChange={() => {
-												const	checked = searchColumns.includes(column);
+			<br />
 
-												setSearchColumns((prev) => {
-													return (checked ? prev.filter((sc) => { return (sc !== column); }) : [...prev, column]);
-												});
-											}}
-										/>
-										{column}
-									</label>
-								);
-							})
-						} */}
-					</div>
-					<br /><br />
-					<div>
-						<Datatable data={search(leadsList)}></Datatable>
-					</div>
-				</div>
-			}
+			<b> total: {leadsList.length} </b>
+
+			<br />
+
+			{ submit && <DataTableSearch data={leadsList}></DataTableSearch> }
 		</div>
 	);
 }

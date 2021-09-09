@@ -1,13 +1,25 @@
-th > div {
+.dataTable {
+	margin: 30px auto;
+	max-width: 100%;
+	font-size: 16px;
+}
+
+.dataTable th > div {
 	display: flex;
 	justify-content: space-between;
 }
 
-th > div > span {
+.dataTable th > div > span {
 	display: flex;
 	margin-left: 20px;
 }
 
-th > div > span > svg {
+.dataTable  th > div > span > svg {
 	cursor: pointer;
+}
+
+.dataTable th, .dataTable td {
+	width: 200px; height: 50px;
+	overflow-x: auto;
+	padding: 5px;
 }

@@ -4,7 +4,10 @@ const	router		= express.Router();
 const	leadsCtrl	= require("../controllers/leads");
 
 
-router.get("/read", leadsCtrl.read);
+router.get("/readAll", leadsCtrl.readAll);
+router.get("/readQuery", leadsCtrl.readQuery);
+router.get("/readDestinataires", leadsCtrl.readDestinataires);
+router.get("/readProvenances", leadsCtrl.readProvenances);
 
 
 module.exports = router;

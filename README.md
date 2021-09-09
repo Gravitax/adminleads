@@ -18,7 +18,7 @@ npm install bcrypt cors jsonwebtoken
 ## creation
 npx create-react-app client
 ## dependencies
-npm install react-router-dom react-hook-form axios jwt-decode bcryptjs uuid
+npm install react-router-dom react-hook-form axios jwt-decode bcryptjs uuid react-datepicker
 
 # add this line in frontend/package.json to connect the front with the back
 **Note: this addr must be the same as our backend addr**

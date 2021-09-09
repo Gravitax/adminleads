@@ -19,7 +19,7 @@ function	Profil() {
 
 	useEffect(() => {
 		Axios.get("/api/users/read", { params : { token } })
-			.then((response) => { setUsersList(response.data); console.log(response.data); });
+			.then((response) => { setUsersList(response.data); });
 	}, [token]);
 
 	const	userDelete = (username) => {

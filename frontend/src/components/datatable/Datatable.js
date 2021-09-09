@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { v4 as uuidv4 } from "uuid";
 
-import "./Datatable.css";
+import "./DataTable.css";
 
 
 const	Icon = ({ children, onClick, active = false, size = 20, }) => {
@@ -35,7 +35,7 @@ const	pageData = (data, page = 1, per = 50) => {
 	return (data.slice(per * (page - 1), per * page));
 };
 
-const	Datatable = ({ data }) => {
+const	DataTable = ({ data }) => {
 
 	const	[sortColumn, setSortColumn]	= useState("");
 	const	[sortDir, setSortDir]		= useState("");
@@ -51,8 +51,6 @@ const	Datatable = ({ data }) => {
 	useEffect(() => {
 		if (sortColumn && sortDir) {
 			data.sort((a, b) => {
-				if (!a[sortColumn] || !b[sortColumn])
-					return (0);
 				if (sortDir === "asc" ? a[sortColumn] < b[sortColumn] : a[sortColumn] > b[sortColumn])
 					return (1);
 				return (-1);
@@ -79,7 +77,7 @@ const	Datatable = ({ data }) => {
 		const	handleScroll = () => {
 			const	cY		= window.scrollY;
 			const	tbh		= ref.current.offsetHeight;
-			const	tresh	= 1000;
+			const	tresh	= 2000;
 	
 			if (tbh - cY - tresh < 0 && !state.loading)
 				loadMore();
@@ -107,18 +105,44 @@ const	Datatable = ({ data }) => {
 		);
 	};
 
+	function	selectedColumn(column) {
+		if (column === "timestamp" || column === "flux" || column === "dispositif"
+			|| column === "programme" || column === "projet"
+			|| column === "email"
+			|| column === "webtag")
+			return (true);
+		return (false);
+	}
+
+	function	renameColumn(column) {
+		if (column === "timestamp")		return ("Date");
+		if (column === "flux")			return ("Provenance");
+		if (column === "dispositif")	return ("Dispositif");
+		return (column.charAt(0).toUpperCase() + column.slice(1));
+	}
+
+	function	refaktorLabel(column, label) {
+		if (column === "timestamp")	return (label.split('T')[0]);
+		return (label ? label : "-");
+	}
+
 	return (
-		<table cellSpacing={0} cellPadding={0}>
+		<table cellSpacing={0} cellPadding={0} className="dataTable">
 
 			<thead>
-				<tr id={sortDir} key={uuidv4()}>
+				<tr key={uuidv4()}>
 					{
-						state.data[0] && columns.map((heading) =>
-						<Th key={uuidv4()} label={heading} target={sortColumn} sort={sortDir}
-							onClickDirAsc={() => { setSortDir("asc"); }}
-							onClickDirDsc={() => { setSortDir("dsc"); }}
-							onClickColumn={() => { setSortColumn(heading); }}
-						/>)
+						state.data[0] && columns.map((heading) => {
+							if (selectedColumn(heading)) {
+								return (
+									<Th key={uuidv4()} label={heading} target={sortColumn} sort={sortDir}
+										onClickDirAsc={() => { setSortDir("asc"); }}
+										onClickDirDsc={() => { setSortDir("dsc"); }}
+										onClickColumn={() => { setSortColumn(heading); }}
+									/>
+								);
+							}
+						})
 					}
 				</tr>
 			</thead>
@@ -127,7 +151,17 @@ const	Datatable = ({ data }) => {
 				{
 					state.data.map((row) => {
 						return (
-							<tr key={uuidv4()}>{ columns.map((column) => { return (<td key={uuidv4()}>{row[column]}</td>); }) }</tr>
+							<tr key={uuidv4()}>
+							{
+								columns.map((column) => {
+									if (selectedColumn(column)) {
+										let	label = refaktorLabel(column, row[column]);
+
+										return (<td key={uuidv4()}>{label}</td>);
+									}
+								})
+							}
+							</tr>
 						);
 					})
 				}
@@ -138,4 +172,4 @@ const	Datatable = ({ data }) => {
 };
 
 
-export default Datatable;
+export default DataTable;
