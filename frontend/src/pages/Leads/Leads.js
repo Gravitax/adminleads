@@ -10,45 +10,6 @@ import LeadsForm from "../../components/leadsForm/LeadsForm";
 import "./Leads.css";
 
 
-/*
-
-<select class="form-control" name="provenance">
-	<option value="">-</option>
-	<?foreach($dispositifs as $idDispositif => $dispositif){?>
-		<?
-		$selectedProvenance = '';
-		if ($_SESSION['adminleads']['provenance'] == $idDispositif) :
-			$selectedProvenance = ' selected="selected"';
-		endif;
-		?>
-	    <option  <?=$selectedProvenance?> value="<?=$idDispositif?>" ><?=$dispositif?></option>
-	<?}?>
-</select>
-
-while($dispositif = $dispositifsReq->fetch(PDO::FETCH_ASSOC))
-	$dispositifs[$dispositif['id']] = $dispositif['nom'];
-
-----------------------------------------------------------------------------------------------------
-
-<select class="form-control" name="destinataire">
-	<option value="">-</option>
-	<?foreach($destinataires as $idDestinataire => $destinataireTmp){?>
-	    <?
-		$selectedDestinataire = '';
-		if ($_SESSION['adminleads']['destinataire'] == $idDestinataire) :
-				$selectedDestinataire = ' selected="selected"';
-		endif;
-		?>
-	    <option  <?=$selectedDestinataire?> value="<?=$idDestinataire?>" ><?=$destinataireTmp?></option>
-	<?}?>
-</select>
-
-while($destinataireTmp = $destinatairesReq->fetch(PDO::FETCH_ASSOC))
-	$destinataires[$destinataireTmp['id']] = $destinataireTmp['nom'];
-
-*/
-
-
 function	Leads() {
 	const	history	= useHistory();
 
@@ -95,11 +56,13 @@ function	Leads() {
 
 			<br />
 
-			<b> total: {leadsList.length} </b>
-
-			<br />
-
-			{ submit && <DataTableSearch data={leadsList}></DataTableSearch> }
+			{ submit &&
+				<DataTableSearch
+					data={leadsList}
+					destinataires={destinataires}
+					provenances={provenances}
+				/>
+			}
 		</div>
 	);
 }

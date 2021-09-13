@@ -1,7 +1,14 @@
 .dataTable {
+	border-collapse: collapse;
 	margin: 30px auto;
-	max-width: 100%;
+	max-width: 90%;
 	font-size: 16px;
+}
+
+.dataTable tr, .dataTable th, .dataTable td {
+	border: 1px solid red;
+	padding: 10px;
+	text-align: left;
 }
 
 .dataTable th > div {
@@ -14,12 +21,36 @@
 	margin-left: 20px;
 }
 
-.dataTable  th > div > span > svg {
+.dataTable th > div > span > svg {
 	cursor: pointer;
 }
 
 .dataTable th, .dataTable td {
-	width: 200px; height: 50px;
+	max-width: 200px; height: 50px;
 	overflow-x: auto;
 	padding: 5px;
 }
+
+.dataTable td span {
+	padding: 5px;
+	background: #5cb85c; color: white;
+	display: inline-block; width: 100%; text-align: center;
+	border: 1px solid black; border-radius: 5px;
+}
+.dataTable td span.sim {
+	background: #5bc0de;
+}
+.dataTable td span.deny {
+	background: #d9534f;
+}
+
+.dataTable tbody tr.deny:hover {
+	background: #d9534f;
+}
+.dataTable tbody tr.accept:hover {
+	background: #5cb85c;
+}
+
+.dataTable .type { min-width: 120px; }
+
+/* .dataTable tbody tr.deny { background: #d9534f; } */

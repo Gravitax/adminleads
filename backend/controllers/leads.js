@@ -39,6 +39,8 @@ exports.readQuery = (req, res, next) => {
 		if (dateEnd)				query += ` timestamp <= '${dateEnd}'`;
 	}
 
+	console.log(query);
+
 	try {
 		db.query(query,
 			(error, results) => {
@@ -54,7 +56,7 @@ exports.readQuery = (req, res, next) => {
 
 exports.readDestinataires = (req, res, next) => {
 	try {
-		db.query("SELECT * FROM flux WHERE 1 ORDER BY nom ASC",
+		db.query("SELECT * FROM flux WHERE 1",
 			(error, results) => {
 				if (error) throw (error);
 				res.send(results);
@@ -68,7 +70,7 @@ exports.readDestinataires = (req, res, next) => {
 
 exports.readProvenances = (req, res, next) => {
 	try {
-		db.query("SELECT * FROM dispositif WHERE 1 ORDER BY nom ASC",
+		db.query("SELECT * FROM dispositif WHERE 1",
 			(error, results) => {
 				if (error) throw (error);
 				res.send(results);

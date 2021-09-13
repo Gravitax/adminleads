@@ -4,23 +4,23 @@ import React, { useState } from "react";
 import DataTable from "../dataTable/DataTable";
 
 
-const	DataTableSearch = ({ data }) => {
+const	DataTableSearch = ({ data, provenances, destinataires }) => {
 	const	[query, setQuery]					= useState("");
 	const	[searchColumns, setSearchColumns]	= useState([
-		"timestamp", "programme", "civilite", "nom", "prenom", "email", "webtag",
+		"timestamp", "flux", "programme", "dispositif", "email", "webtag", "projet",
 	]);
+
+	// let	columns = data[0] && Object.keys(data[0]);
 
 	function	search(rows) {
 		return (rows.filter((row) => {
 			return (
 				searchColumns.some((column) => {
-					return (row[column] && row[column].toString().toLowerCase().indexOf(query) > -1);
+					return (row[column] && row[column].toString().toLowerCase().indexOf(query.toLowerCase()) > -1);
 				})
 			);
 		}));
 	}
-
-	// let	columns = data[0] && Object.keys(data[0]);
 
 	return (
 		<div>
@@ -47,7 +47,11 @@ const	DataTableSearch = ({ data }) => {
 				// 	);
 				// })
 			}
-			<DataTable data={search(data)}></DataTable>
+			<DataTable
+				data={search(data)}
+				destinataires={destinataires}
+				provenances={provenances}
+			/>
 		</div>
 	);
 }

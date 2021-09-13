@@ -35,23 +35,28 @@ const	pageData = (data, page = 1, per = 50) => {
 	return (data.slice(per * (page - 1), per * page));
 };
 
-const	DataTable = ({ data }) => {
+const	DataTable = ({ data, provenances, destinataires }) => {
 
 	const	[sortColumn, setSortColumn]	= useState("");
 	const	[sortDir, setSortDir]		= useState("");
+	const	[sort, setSort]				= useState(false);
 
-	let		[state, setState] = useState({
+	const	[state, setState]			= useState({
 		data	: pageData(data),
-		loading	: false,
 		page	: 1,
 	});
 
 	const	ref = useRef(null);
 
 	useEffect(() => {
-		if (sortColumn && sortDir) {
+
+		if (sort) {
 			data.sort((a, b) => {
-				if (sortDir === "asc" ? a[sortColumn] < b[sortColumn] : a[sortColumn] > b[sortColumn])
+				a = a[sortColumn]?.toString();
+				b = b[sortColumn]?.toString();
+				if (!a && !b)
+					return (0);
+				if (sortDir === "asc" ? a < b : a > b)
 					return (1);
 				return (-1);
 			});
@@ -59,9 +64,8 @@ const	DataTable = ({ data }) => {
 
 		setState({
 			data	: pageData(data),
-			loading	: false,
 			page	: 1,
-		})
+		});
 
 		const	loadMore = () => {
 			setState((prev) => ({
@@ -69,7 +73,6 @@ const	DataTable = ({ data }) => {
 					...prev.data,
 					...pageData(data, prev.page + 1),
 				],
-				loading	: false,
 				page	: prev.page + 1,
 			}));
 		};
@@ -79,27 +82,34 @@ const	DataTable = ({ data }) => {
 			const	tbh		= ref.current.offsetHeight;
 			const	tresh	= 2000;
 	
-			if (tbh - cY - tresh < 0 && !state.loading)
+			if (tbh - cY - tresh < 0)
 				loadMore();
 		};
 
 		document.addEventListener("scroll", handleScroll);
 		return (() => document.removeEventListener("scroll", handleScroll));
-	}, [data, sortColumn, sortDir, state.loading]);
-	
-	const	columns	= state.data[0] && Object.keys(state.data[0]);
+	}, [data, sortColumn, sortDir, sort]);
+
+	function	renameColumn(column) {
+		if (column === "timestamp")		return ("Date");
+		if (column === "flux")			return ("Destinataires");
+		if (column === "dispositif")	return ("Provenances");
+		return (column.charAt(0).toUpperCase() + column.slice(1));
+	}
 	
 	const	Th = ({ ...data }) => {
 		let	active = data.label === data.target;
 
 		return (
-			<th key={data.key} onClick={data.onClickColumn}>
+			<th key={data.key} onClick={data.onClickColumn} className={data.className}>
 				<div>
-					{data.label}
-					<span>
-						<IconAsc onClick={data.onClickDirAsc} active={active && data.sort === "asc"}/>
-						<IconDsc onClick={data.onClickDirDsc} active={active && data.sort === "dsc"}/>
-					</span>
+					{renameColumn(data.label)}
+					{ data.sort !== undefined &&
+						<span>
+							<IconAsc onClick={data.onClickDirAsc} active={active && data.sort === "asc"}/>
+							<IconDsc onClick={data.onClickDirDsc} active={active && data.sort === "dsc"}/>
+						</span>
+					}
 				</div>
 			</th>
 		);
@@ -108,66 +118,88 @@ const	DataTable = ({ data }) => {
 	function	selectedColumn(column) {
 		if (column === "timestamp" || column === "flux" || column === "dispositif"
 			|| column === "programme" || column === "projet"
-			|| column === "email"
-			|| column === "webtag")
+			|| column === "email" || column === "webtag")
 			return (true);
 		return (false);
 	}
 
-	function	renameColumn(column) {
-		if (column === "timestamp")		return ("Date");
-		if (column === "flux")			return ("Provenance");
-		if (column === "dispositif")	return ("Dispositif");
-		return (column.charAt(0).toUpperCase() + column.slice(1));
+	function	refaktorLabel(column, label, provenances, destinataires) {
+		if (column === "timestamp")		return (label.split('T')[0]);
+		if (column === "flux")			label = destinataires[label - 1]?.nom;
+		if (column === "dispositif")	label = provenances[label - 1]?.nom;
+		return (label);
 	}
 
-	function	refaktorLabel(column, label) {
-		if (column === "timestamp")	return (label.split('T')[0]);
-		return (label ? label : "-");
+	function	getRowType(webtag, accept) {
+		let	label = "Lead Prog.";
+
+		if (!webtag)
+			return (<span className={`lead ${accept}`}>{label}</span>);
+		if (webtag.indexOf("SIM DUFL") > -1 || webtag.indexOf("SIMDUFLOT") > -1)	label = "Sim. Duflot";
+		if (webtag.indexOf("SIM CENSI") > -1 || webtag.indexOf("SIMCENSI") > -1)	label = "Sim. Censi";
+		if (webtag.indexOf("SIM LMNP") > -1 || webtag.indexOf("SIMLMNP") > -1)		label = "Sim. Lmnp";
+		if (webtag.indexOf("DOC DUFLOT") > -1 || webtag.indexOf("GUIDUFLOT") > -1)	label = "Sim. Duflot";
+		if (webtag.indexOf("GUIDE PINEL") > -1 || webtag.indexOf("GUIDPINEL") > -1)	label = "Guide Pinel";
+		if (webtag.indexOf("SIM PINEL") > -1 || webtag.indexOf("SIMPINEL") > -1
+			|| webtag.indexOf("DIS PINEL") > -1)									label = "Sim. pinel";
+		return (<span className={`${label === "Lead Prog." ? "lead" : "sim"} ${accept}`}>{label}</span>);
 	}
+	
+	const	columns	= state.data[0] && Object.keys(state.data[0]);
 
 	return (
-		<table cellSpacing={0} cellPadding={0} className="dataTable">
+		<div>
 
-			<thead>
-				<tr key={uuidv4()}>
+			<h3>total: {data.length}</h3>
+
+			<table cellSpacing={0} cellPadding={0} className="dataTable">
+
+				<thead>
+					<tr key={uuidv4()}>
+						{
+							state.data[0] && columns.map((heading) => {
+								if (selectedColumn(heading)) {
+									return (
+										<Th key={uuidv4()} label={heading} target={sortColumn} sort={sortDir}
+											onClickDirAsc={() => { setSortDir("asc"); }}
+											onClickDirDsc={() => { setSortDir("dsc"); }}
+											onClickColumn={() => { setSortColumn(heading); setSort(true); }}
+										/>
+									);
+								}
+								return (null);
+							})
+						}
+						<Th key={uuidv4()} label={"Type"} className="type" />
+					</tr>
+				</thead>
+
+				<tbody ref={ref}>
 					{
-						state.data[0] && columns.map((heading) => {
-							if (selectedColumn(heading)) {
-								return (
-									<Th key={uuidv4()} label={heading} target={sortColumn} sort={sortDir}
-										onClickDirAsc={() => { setSortDir("asc"); }}
-										onClickDirDsc={() => { setSortDir("dsc"); }}
-										onClickColumn={() => { setSortColumn(heading); }}
-									/>
-								);
-							}
+						state.data.map((row) => {
+							let	accept = row["accepte"] ? "accept" : "deny";
+
+							return (
+								<tr key={uuidv4()} className={accept}>
+								{
+									columns.map((column) => {
+										if (selectedColumn(column)) {
+											let	label = refaktorLabel(column, row[column], provenances, destinataires);
+
+											return (<td key={uuidv4()}>{label}</td>);
+										}
+										return (null);
+									})
+								}
+									<td key={uuidv4()}>{getRowType(row["webtag"], accept)}</td>
+								</tr>
+							);
 						})
 					}
-				</tr>
-			</thead>
+				</tbody>
 
-			<tbody ref={ref}>
-				{
-					state.data.map((row) => {
-						return (
-							<tr key={uuidv4()}>
-							{
-								columns.map((column) => {
-									if (selectedColumn(column)) {
-										let	label = refaktorLabel(column, row[column]);
-
-										return (<td key={uuidv4()}>{label}</td>);
-									}
-								})
-							}
-							</tr>
-						);
-					})
-				}
-			</tbody>
-
-		</table>
+			</table>
+		</div>
 	);
 };
 
