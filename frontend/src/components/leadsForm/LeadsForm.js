@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import DatePicker from "react-datepicker";
 
 import Dropdown from "../dropdown/Dropdown";
+// import Checkbox from "../checkbox/Checkbox";
 
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -48,6 +49,15 @@ const	LeadsForm = ({ ...data }) => {
 				<Dropdown options={data?.provenances} prompt="provenances" label="nom"
 					value={provenances} onChange={(value) => { setProvenances(value) }}
 				/>
+
+				{/* <Checkbox
+					checked={checked}
+					onChange={(val) => {
+						setChecked(val);
+						console.log(val);
+					}}
+					label={"hello world!"}
+				/> */}
 				
 			</div>
 

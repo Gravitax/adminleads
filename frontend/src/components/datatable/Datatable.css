@@ -18,7 +18,7 @@
 
 .dataTable th > div > span {
 	display: flex;
-	margin-left: 20px;
+	margin-left: 5px;
 }
 
 .dataTable th > div > span > svg {
@@ -26,7 +26,7 @@
 }
 
 .dataTable th, .dataTable td {
-	max-width: 200px; height: 50px;
+	max-width: 120px; height: 50px;
 	overflow-x: auto;
 	padding: 5px;
 }
@@ -54,3 +54,19 @@
 .dataTable .type { min-width: 120px; }
 
 /* .dataTable tbody tr.deny { background: #d9534f; } */
+
+.dataTable .timestamp,
+.dataTable .flux,
+.dataTable .programme,
+.dataTable .dispositif,
+.dataTable .email,
+.dataTable .webtag,
+.dataTable .projet,
+.dataTable .commentaire,
+.dataTable .type,
+.dataTable .select {
+	max-width: fit-content;
+	max-width: intrinsic;           /* Safari/WebKit uses a non-standard name */
+	max-width: -moz-max-content;    /* Firefox/Gecko */
+	max-width: -webkit-max-content; /* Chrome */
+}

@@ -7,7 +7,7 @@ import DataTable from "../dataTable/DataTable";
 const	DataTableSearch = ({ data, provenances, destinataires }) => {
 	const	[query, setQuery]					= useState("");
 	const	[searchColumns, setSearchColumns]	= useState([
-		"timestamp", "flux", "programme", "dispositif", "email", "webtag", "projet",
+		"timestamp", "flux", "programme", "dispositif", "email", "webtag", "projet", "commentaire",
 	]);
 
 	// let	columns = data[0] && Object.keys(data[0]);
