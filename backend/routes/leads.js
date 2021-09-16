@@ -9,5 +9,7 @@ router.get("/readQuery", leadsCtrl.readQuery);
 router.get("/readDestinataires", leadsCtrl.readDestinataires);
 router.get("/readProvenances", leadsCtrl.readProvenances);
 
+router.post("/update", leadsCtrl.update);
+
 
 module.exports = router;

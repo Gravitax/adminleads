@@ -1,0 +1,9 @@
+#leadsList_container {
+	padding: 30px;
+}
+
+#scroll_top {
+	padding: 5px; background: white; color: #333;
+	position: fixed; bottom: 30px; right: 30px;
+	cursor: pointer;
+}

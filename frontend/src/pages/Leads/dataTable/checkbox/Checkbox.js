@@ -2,10 +2,13 @@ import "./Checkbox.css";
 
 
 const	Checkbox = ({ ...data }) => {
+	let	checked;
+	
 	if (!data) return ;
-	let	checked = data.selected.some((tmp) => tmp?.id === data.row?.id);
-
-	if (data.checked) checked = data.checked;
+	if (data.selected)
+		checked = data.selected.some((tmp) => tmp?.id === data.row?.id);
+	if (data.checked)
+		checked = data.checked;
 
 	return (
 		<div className="checkbox">

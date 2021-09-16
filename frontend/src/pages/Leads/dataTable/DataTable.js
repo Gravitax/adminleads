@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { v4 as uuidv4 } from "uuid";
 
-import Checkbox from "../checkbox/Checkbox";
+import Checkbox from "./checkbox/Checkbox";
+import Selected from "./selected/Selected";
 import Th from "./Th";
 import { getRowType, refaktorLabel, selectedColumn } from "./tools.js";
 
@@ -16,10 +17,11 @@ const	DataTable = ({ data, provenances, destinataires }) => {
 
 	const	[sortColumn, setSortColumn]	= useState("");
 	const	[sortDir, setSortDir]		= useState("");
-	const	[sort, setSort]				= useState(false);
 
 	const	[selected, setSelected]		= useState([]);
 	const	[checked, setChecked]		= useState(false);
+
+	const	[show, setShow] 			= useState(50);
 
 	const	[state, setState]			= useState({
 		data	: pageData(data),
@@ -30,7 +32,7 @@ const	DataTable = ({ data, provenances, destinataires }) => {
 
 	useEffect(() => {
 
-		if (sort) {
+		if (sortDir && sortColumn) {
 			data.sort((a, b) => {
 				a = a[sortColumn]?.toString().toLowerCase();
 				b = b[sortColumn]?.toString().toLowerCase();
@@ -68,7 +70,7 @@ const	DataTable = ({ data, provenances, destinataires }) => {
 
 		document.addEventListener("scroll", handleScroll);
 		return (() => document.removeEventListener("scroll", handleScroll));
-	}, [data, sortColumn, sortDir, sort]);
+	}, [data, sortColumn, sortDir]);
 
 	function	handleCheckboxChange(row) {
 		setSelected((prev) => {
@@ -84,10 +86,26 @@ const	DataTable = ({ data, provenances, destinataires }) => {
 	const	columns	= state.data[0] && Object.keys(state.data[0]);
 
 	return (
-		<div>
+		<div id="dataTable_container">
+
+			{ selected.length > 0 &&
+				<Selected selected={selected} />
+			}
 
 			<h3>total query: {data.length}</h3>
+			<h3>total selected: {selected.length}</h3>
 			<h3>total page: {state.data.length}</h3>
+			<div id="show_all">
+				<input type="number" value={show} onChange={(e) => { setShow(e.target.value); }} />
+				<span onClick={() => {
+						if (show > data.length) setShow(data.length);
+						if (show > 250) setShow(250);
+						setState({
+							data	: pageData(data, 1, show > 250 ? 250 : show),
+							page	: 1,
+						});
+				}}>SHOW</span>
+			</div>
 
 			<table cellSpacing={0} cellPadding={0} className="dataTable">
 
@@ -101,7 +119,7 @@ const	DataTable = ({ data, provenances, destinataires }) => {
 											sort={sortDir} className={heading}
 											onClickDirAsc={() => { setSortDir("asc"); }}
 											onClickDirDsc={() => { setSortDir("dsc"); }}
-											onClickColumn={() => { setSortColumn(heading); setSort(true); }}
+											onClickColumn={() => { setSortColumn(heading); }}
 										/>
 									);
 								}

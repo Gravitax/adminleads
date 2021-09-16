@@ -4,8 +4,8 @@ import Axios from "axios";
 
 import { check_page_access } from "../../modules/functions";
 
-import DataTableSearch from "../../components/dataTableSearch/DataTableSearch";
-import LeadsForm from "../../components/leadsForm/LeadsForm";
+import DataTableSearch from "./dataTableSearch/DataTableSearch";
+import LeadsForm from "./leadsForm/LeadsForm";
 
 import "./Leads.css";
 
@@ -34,15 +34,17 @@ function	Leads() {
 				setProvenances(response.data);
 			});
 		if (submit) {
+			setLeadsList([]);
 			Axios.get("/api/leads/readQuery", { params : { subData }, })
 				.then((response) => {
 					setLeadsList(response.data);
 				});
+			setSubmit(false);
 		}
 	}, [submit, subData]);
 
 	return (
-		<div>
+		<div id="leadsList_container">
 			<h1> LEADS LIST </h1>
 
 			<LeadsForm
@@ -56,13 +58,14 @@ function	Leads() {
 
 			<br />
 
-			{ submit &&
+			{ leadsList.length > 0 &&
 				<DataTableSearch
 					data={leadsList}
 					destinataires={destinataires}
 					provenances={provenances}
 				/>
 			}
+			<span id="scroll_top" onClick={() => window.scrollTo(0, 0)}>scroll top</span>
 		</div>
 	);
 }

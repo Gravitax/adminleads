@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import DatePicker from "react-datepicker";
 
 import Dropdown from "../dropdown/Dropdown";
-// import Checkbox from "../checkbox/Checkbox";
 
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -14,19 +13,21 @@ const	LeadsForm = ({ ...data }) => {
 	const	[dateEnd, setDateEnd]				= useState(null);
 	const	[destinataires, setDestinataires]	= useState(null);
 	const	[provenances, setProvenances]		= useState(null);
+	const	[status, setStatus]					= useState(null);
 
 	const	handleSubmit = () => {
-		data.onClick({
+		data?.onClick({
 			dateStart		: dateStart,
 			dateEnd			: dateEnd,
 			destinataires	: destinataires,
 			provenances		: provenances,
+			status			: status,
 			submit			: true,
 		});
 	};
 
 	return (
-		<div className="leadsForm">
+		<div id="leadsForm">
 
 			<div className="flex_container">
 
@@ -43,21 +44,18 @@ const	LeadsForm = ({ ...data }) => {
 					isClearable placeholderText="date end"
 				/>
 
-				<Dropdown options={data?.destinataires} prompt="destinataires" label="nom"
-					value={destinataires} onChange={(value) => { setDestinataires(value); }}
+				<Dropdown prompt="destinataires" label="nom" value={destinataires}
+					options={data?.destinataires}
+					onChange={(value) => { setDestinataires(value); }}
 				/>
-				<Dropdown options={data?.provenances} prompt="provenances" label="nom"
-					value={provenances} onChange={(value) => { setProvenances(value) }}
+				<Dropdown prompt="provenances" label="nom" value={provenances}
+					options={data?.provenances}
+					onChange={(value) => { setProvenances(value) }}
 				/>
-
-				{/* <Checkbox
-					checked={checked}
-					onChange={(val) => {
-						setChecked(val);
-						console.log(val);
-					}}
-					label={"hello world!"}
-				/> */}
+				<Dropdown prompt="status" label="status" value={status}
+					options={[{ status: "All" }, { status: "Valid" }, { status: "Invalid" }]}
+					onChange={(value) => { setStatus(value) }}
+				/>
 				
 			</div>
 
