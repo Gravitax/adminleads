@@ -10,7 +10,9 @@ import "./DataTable.css";
 
 
 const	pageData = (data, page = 1, per = 50) => {
-	return (data.slice(per * (page - 1), per * page));
+	if (page < 1)	page = 1;
+	if (per < 1)	per = 1;
+	return (data?.slice(per * (page - 1), per * page));
 };
 
 const	DataTable = ({ data, provenances, destinataires, onClick }) => {
