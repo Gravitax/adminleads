@@ -22,7 +22,6 @@ const	LeadsForm = ({ ...data }) => {
 			destinataires	: destinataires,
 			provenances		: provenances,
 			status			: status,
-			submit			: true,
 		});
 	};
 

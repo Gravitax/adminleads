@@ -13,7 +13,7 @@ const	pageData = (data, page = 1, per = 50) => {
 	return (data.slice(per * (page - 1), per * page));
 };
 
-const	DataTable = ({ data, provenances, destinataires }) => {
+const	DataTable = ({ data, provenances, destinataires, onClick }) => {
 
 	const	[sortColumn, setSortColumn]	= useState("");
 	const	[sortDir, setSortDir]		= useState("");
@@ -60,12 +60,14 @@ const	DataTable = ({ data, provenances, destinataires }) => {
 		};
 	
 		const	handleScroll = () => {
-			const	cY		= window.scrollY;
-			const	tbh		= ref.current.offsetHeight;
-			const	tresh	= 2000;
-	
-			if (tbh - cY - tresh < 0)
-				loadMore();
+			if (ref?.current) {
+				const	cY		= window.scrollY;
+				const	tbh		= ref.current.offsetHeight;
+				const	tresh	= 2000;
+
+				if (tbh - cY - tresh < 0)
+					loadMore();
+			}
 		};
 
 		document.addEventListener("scroll", handleScroll);
@@ -89,7 +91,7 @@ const	DataTable = ({ data, provenances, destinataires }) => {
 		<div id="dataTable_container">
 
 			{ selected.length > 0 &&
-				<Selected selected={selected} />
+				<Selected selected={selected} onClick={onClick} />
 			}
 
 			<h3>total query: {data.length}</h3>
@@ -98,12 +100,12 @@ const	DataTable = ({ data, provenances, destinataires }) => {
 			<div id="show_all">
 				<input type="number" value={show} onChange={(e) => { setShow(e.target.value); }} />
 				<span onClick={() => {
-						if (show > data.length) setShow(data.length);
-						if (show > 250) setShow(250);
-						setState({
-							data	: pageData(data, 1, show > 250 ? 250 : show),
-							page	: 1,
-						});
+					if (show > 250) setShow(250);
+					if (show > data.length) setShow(data.length);
+					setState({
+						data	: pageData(data, 1, show > 250 ? 250 : show),
+						page	: 1,
+					});
 				}}>SHOW</span>
 			</div>
 

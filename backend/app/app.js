@@ -16,10 +16,10 @@ app.use(cors({
 	credentials	: true,
 }));
 
-// parse application/x-www-form-urlencoded
-app.use(express.urlencoded({ extended: true, }));
 // parse application/json
-app.use(express.json());
+app.use(express.json({ limit: "100mb" }));
+// parse application/x-www-form-urlencoded
+app.use(express.urlencoded({ limit: "100mb", parameterLimit: 50000, extended: true, }));
 
 // set the front as static repository
 app.use(express.static("../frontend/build"));

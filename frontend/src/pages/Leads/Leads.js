@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
+import { ScaleLoader } from "react-spinners";
 import Axios from "axios";
 
 import { check_page_access } from "../../modules/functions";
@@ -24,6 +25,9 @@ function	Leads() {
 	const	[submit, setSubmit]		= useState(false);
 	const	[subData, setSubData]	= useState([]);
 
+	const	[loading, setLoading]	= useState(false);
+	const	override				= `display: flex; justify-content: center; align-items: center;`;
+
 	useEffect(() => {
 		Axios.get("/api/leads/readDestinataires")
 			.then((response) => {
@@ -38,6 +42,7 @@ function	Leads() {
 			Axios.get("/api/leads/readQuery", { params : { subData }, })
 				.then((response) => {
 					setLeadsList(response.data);
+					setLoading(false);
 				});
 			setSubmit(false);
 		}
@@ -49,20 +54,29 @@ function	Leads() {
 
 			<LeadsForm
 				onClick={({ ...data }) => {
-					setSubmit(data?.submit);
 					setSubData(data);
+					setSubmit(true);
+					setLoading(true);
 				}}
 				destinataires={destinataires}
 				provenances={provenances}
 			/>
 
 			<br />
-
+			{	loading &&
+				<ScaleLoader
+					css={override} size={150} color={"red"} loading={loading}
+				/>
+			}
 			{ leadsList.length > 0 &&
 				<DataTableSearch
 					data={leadsList}
 					destinataires={destinataires}
 					provenances={provenances}
+					onClick={() => {
+						setSubmit(true);
+						setLoading(true);
+					}}
 				/>
 			}
 			<span id="scroll_top" onClick={() => window.scrollTo(0, 0)}>scroll top</span>

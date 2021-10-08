@@ -7,30 +7,48 @@ function	getID(selected) {
 	selected.forEach((tmp) => {
 		arr.push(tmp?.id);
 	});
-	return (arr);
+	return (arr.join(","));
+}
+
+function	leads_anonymisation(id_list) {
+	return (`UPDATE lead SET telephone = 'TELEPHONE', email = 'EMAIL' WHERE id IN ( ${id_list} )`);
+}
+function	leads_accept(id_list) {
+	return (`UPDATE lead SET accepte = '1' WHERE id IN ( ${id_list} )`);
+}
+function	leads_reject(id_list) {
+	return (`UPDATE lead SET accepte = '0' WHERE id IN ( ${id_list} )`);
+}
+function	leads_delete(id_list) {
+	return (`DELETE FROM lead WHERE id IN ( ${id_list} )`);
 }
 
 exports.update = (req, res, next) => {
 	let	data	= req.query.data || req.body.data;
 	let	status	= req.query.status || req.body.status;
-
+	
 	if (!data || !status) return ;
+	let	action	= status.action;
+	let	id_list	= getID(data.selected);
+	let	query	= null;
+	
+	if (action ===  "Anonymiser")		query = leads_anonymisation(id_list);
+	else if (action ===  "Accepter")	query = leads_accept(id_list);
+	else if (action ===  "Rejeter")		query = leads_reject(id_list);
+	else if (action ===  "Supprimer")	query = leads_delete(id_list);
 
-	let	query = "SELECT * FROM lead";
-	query += ` WHERE id IN (${getID(data.selected).join(',')})`;
-
-	console.log(query);
-
-	try {
-		db.query(query,
-			(error, results) => {
-				if (error) throw (error);
-				res.send(results);
-			}
-		);
-	}
-	catch {
-		res.status(500);
+	if (query) {
+		try {
+			db.query(query,
+				(error, results) => {
+					if (error) throw (error);
+					res.send(results);
+				}
+			);
+		}
+		catch {
+			res.status(500);
+		}
 	}
 }
 
