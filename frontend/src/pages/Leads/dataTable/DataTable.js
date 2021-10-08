@@ -100,13 +100,19 @@ const	DataTable = ({ data, provenances, destinataires, onClick }) => {
 			<div id="show_all">
 				<input type="number" value={show} onChange={(e) => { setShow(e.target.value); }} />
 				<span onClick={() => {
-					if (show > 250) setShow(250);
 					if (show > data.length) setShow(data.length);
 					setState({
-						data	: pageData(data, 1, show > 250 ? 250 : show),
+						data	: pageData(data, 1, show),
 						page	: 1,
 					});
 				}}>SHOW</span>
+				<span onClick={() => {
+					setShow(data.length);
+					setState({
+						data	: pageData(data, 1, data.length),
+						page	: 1,
+					});
+				}}>SHOW ALL</span>
 			</div>
 
 			<table cellSpacing={0} cellPadding={0} className="dataTable">

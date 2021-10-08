@@ -2,18 +2,17 @@ import React, { useState } from "react";
 import Axios from "axios";
 
 import Dropdown from "../../dropdown/Dropdown";
-import ExportCSV from "./ExportCSV";
+import { exportCSV } from "../../../../modules/exportCSV";
 
 import "./Selected.css";
 
 
 const	Selected = ({ ...data }) => {
-	const	[status, setStatus]			= useState(null);
-	const	[dataExport, setDataExport]	= useState();
+	const	[status, setStatus]	= useState(null);
 
 	function	handleAction() {
 		if (status?.action === "Exporter") {
-			setDataExport(data?.selected);
+			exportCSV(data?.selected, "leads_list");
 		}
 		else {
 			Axios.post("/api/leads/update", { data, status })
@@ -34,10 +33,6 @@ const	Selected = ({ ...data }) => {
 				onChange={(value) => { setStatus(value) }}
 			/>
 			<span onClick={handleAction}> APPLY </span>
-
-			{ dataExport?.length > 0 &&
-				<ExportCSV csvData={dataExport} fileName={"leads_list"} />
-			}
 		</div>
 	);
 };
