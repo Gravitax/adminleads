@@ -6,6 +6,8 @@ import Selected from "./selected/Selected";
 import Th from "./Th";
 import { getRowType, refaktorLabel, selectedColumn } from "./tools.js";
 
+import { exportCSV } from "../../../modules/exportCSV";
+
 import "./DataTable.css";
 
 
@@ -115,6 +117,7 @@ const	DataTable = ({ data, provenances, destinataires, onClick }) => {
 						page	: 1,
 					});
 				}}>SHOW ALL</span>
+				<span onClick={() => exportCSV(data, "leads_list")}>EXPORT ALL</span>
 			</div>
 
 			<table cellSpacing={0} cellPadding={0} className="dataTable">

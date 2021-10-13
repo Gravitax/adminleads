@@ -5,7 +5,7 @@ export function		selectedColumn(column) {
 }
 
 export function		refaktorLabel(column, label, provenances, destinataires) {
-	if (!label) return ;
+	if (!label || !provenances || !destinataires) return ;
 	if (column === "timestamp")		return (label.split('T')[0]);
 	if (column === "flux")			label = `${destinataires[label - 1]?.nom} (${label})`;
 	if (column === "dispositif")	label = `${provenances[label - 1]?.nom} (${label})`;

@@ -28,6 +28,7 @@ exports.update = (req, res, next) => {
 	let	status	= req.query.status || req.body.status;
 	
 	if (!data || !status) return ;
+
 	let	action	= status.action;
 	let	id_list	= getID(data.selected);
 	let	query	= null;
@@ -37,18 +38,18 @@ exports.update = (req, res, next) => {
 	else if (action ===  "Rejeter")		query = leads_reject(id_list);
 	else if (action ===  "Supprimer")	query = leads_delete(id_list);
 
-	if (query) {
-		try {
-			db.query(query,
-				(error, results) => {
-					if (error) throw (error);
-					res.send(results);
-				}
-			);
-		}
-		catch {
-			res.status(500);
-		}
+	if (!query) return ;
+
+	try {
+		db.query(query,
+			(error, results) => {
+				if (error) throw (error);
+				res.send(results);
+			}
+		);
+	}
+	catch {
+		res.status(500);
 	}
 }
 
@@ -76,7 +77,7 @@ exports.readQuery = (req, res, next) => {
 	let	dateEnd		= data.dateEnd?.split("T")[0];
 	let	flux		= data.destinataires;
 	let	dispositif	= data.provenances;
-	let	status		= data.status?.status;
+	let	status		= data.status?.status || data.status;
 	let query 		= "SELECT * FROM lead";
 
 	if (status === "All") status = null;
@@ -86,7 +87,7 @@ exports.readQuery = (req, res, next) => {
 	if (dateStart || dateEnd || flux || dispositif || status) {
 		query += " WHERE";
 
-		if (dateStart)				query += ` timestamp >= '${dateStart}'`;
+		if (dateStart)				query += ` timestamp > '${dateStart}'`;
 		if (dateStart && dateEnd)	query += " AND";
 		if (dateEnd)				query += ` timestamp <= '${dateEnd}'`;
 

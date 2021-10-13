@@ -24,6 +24,15 @@ export const	extractParamsUrl = (chaineGET) => {
 	return (result);
 }
 
+export const	get_date = (data = {}, separator = '-') => {
+	let	newDate	= new Date()
+	let	date	= newDate.getDate() + data?.day;
+	let	month	= newDate.getMonth() + data?.month;
+	let	year	= newDate.getFullYear() + data?.year;
+
+	return (`${year}${separator}${month < 10 ? `0${month}` : `${month}`}${separator}${date}`);
+}
+
 /**
 *  @param {boolean} logged
 *  @param {number} role

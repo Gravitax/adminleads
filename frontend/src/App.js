@@ -25,7 +25,7 @@ function	App(props) {
 					<Route path="/account"	exact component={Account} />
 					<Route path="/leads"	exact component={Leads} />
 					<Route path="/profil"	exact component={Profil} />
-					<Route path="/" component={Home} />
+					<Route path="/" 		component={Home} />
 				</Switch>
 			</Router>
 		</div>

@@ -7,8 +7,8 @@ const	token	= require("../modules/token");
 exports.delete = (req, res, next) => {
 	const	username = req.params.username;
 
-	if (!username)
-		return ;
+	if (!username) return ;
+
 	try {
 		db.query("DELETE FROM users WHERE username = ?", [username],
 			(error, results) => {
@@ -39,8 +39,8 @@ exports.read = (req, res, next) => {
 exports.readOne = (req, res, next) => {
 	const	username	= req.params.username;
 
-	if (!username)
-		return ;
+	if (!username) return ;
+
 	try {
 		db.query("SELECT * FROM users WHERE username = ?", [username],
 			(error, results) => {

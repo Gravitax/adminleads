@@ -8,8 +8,8 @@ exports.login = (req, res, next) => {
 	const	username	= req.body.username;
 	const	password	= req.body.password;
 
-	if (!username || !password)
-		return ;
+	if (!username || !password) return ;
+
 	try {
 		// on selectionne l'user dans la DB
 		db.query("SELECT * FROM users WHERE username = ?", [username],
@@ -45,8 +45,8 @@ exports.register = async (req, res, next) => {
 	const	username	= req.body.username;
 	const	password	= req.body.password;
 
-	if (!username || !password)
-		return ;
+	if (!username || !password) return ;
+
 	try {
 		const	hashedPassword = await bcrypt.hash(password, 10);
 

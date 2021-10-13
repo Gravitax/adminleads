@@ -30,13 +30,9 @@ function	Leads() {
 
 	useEffect(() => {
 		Axios.get("/api/leads/readDestinataires")
-			.then((response) => {
-				setDestinataires(response.data);
-			});
+			.then((response) => { setDestinataires(response.data); });
 		Axios.get("/api/leads/readProvenances")
-			.then((response) => {
-				setProvenances(response.data);
-			});
+			.then((response) => { setProvenances(response.data); });
 		if (submit) {
 			setLeadsList([]);
 			Axios.get("/api/leads/readQuery", { params : { subData }, })
@@ -58,8 +54,7 @@ function	Leads() {
 					setSubmit(true);
 					setLoading(true);
 				}}
-				destinataires={destinataires}
-				provenances={provenances}
+				destinataires={destinataires} provenances={provenances}
 			/>
 
 			<br />
@@ -71,8 +66,7 @@ function	Leads() {
 			{ leadsList.length > 0 &&
 				<DataTableSearch
 					data={leadsList}
-					destinataires={destinataires}
-					provenances={provenances}
+					destinataires={destinataires} provenances={provenances}
 					onClick={() => {
 						setSubmit(true);
 						setLoading(true);
