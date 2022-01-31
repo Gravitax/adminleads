@@ -1,23 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { useHistory } from "react-router-dom";
 import { ScaleLoader } from "react-spinners";
 import Axios from "axios";
 
-import { check_page_access } from "../../modules/functions";
-
-import DataTableSearch from "./dataTableSearch/DataTableSearch";
-import LeadsForm from "./leadsForm/LeadsForm";
+import DataTableSearch from "./DataTableSearch/DataTableSearch";
+import LeadsForm from "./LeadsForm/LeadsForm";
 
 import "./Leads.css";
 
 
 function	Leads() {
-	const	history	= useHistory();
-
-	if (check_page_access(true) === false)
-		history.push("/");
-
-
 	const	[leadsList, setLeadsList]			= useState([]);	
 	const	[destinataires, setDestinataires]	= useState([]);
 	const	[provenances, setProvenances]		= useState([]);
@@ -29,13 +20,13 @@ function	Leads() {
 	const	override				= `display: flex; justify-content: center; align-items: center;`;
 
 	useEffect(() => {
-		Axios.get("/api/leads/readDestinataires")
+		Axios.get("/leads/readDestinataires")
 			.then((response) => { setDestinataires(response.data); });
-		Axios.get("/api/leads/readProvenances")
+		Axios.get("/leads/readProvenances")
 			.then((response) => { setProvenances(response.data); });
 		if (submit) {
 			setLeadsList([]);
-			Axios.get("/api/leads/readQuery", { params : { subData }, })
+			Axios.get("/leads/readQuery", { params : { subData }, })
 				.then((response) => {
 					setLeadsList(response.data);
 					setLoading(false);
@@ -45,7 +36,7 @@ function	Leads() {
 	}, [submit, subData]);
 
 	return (
-		<div id="leadsList_container">
+		<div id="leads">
 			<h1> LEADS LIST </h1>
 
 			<LeadsForm

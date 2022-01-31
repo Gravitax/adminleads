@@ -1,22 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { useHistory } from "react-router-dom";
 import Axios from "axios";
 
-import { check_page_access, get_date } from "../../modules/functions";
+import { get_date } from "../../modules/functions";
 
-import DataTableSearch from "../Leads/dataTableSearch/DataTableSearch";
+import DataTableSearch from "../Leads/DataTableSearch/DataTableSearch";
 import LeadsAlert from "./LeadsAlert";
 
 import "./Home.css";
 
 
 function	Home() {
-	const	history	= useHistory();
-
-	if (check_page_access(true) === false)
-		history.push("/login");
-
-
 	const	[module, setModule]	= useState("");
 	const	[submit, setSubmit]	= useState(true);
 
@@ -25,25 +18,23 @@ function	Home() {
 	const	[destinataires, setDestinataires]	= useState([]);
 	const	[provenances, setProvenances]		= useState([]);
 
-
 	useEffect(() => {
 		let		subData, date;
 
-		date	= get_date({ day: -1, month: -1, year: 0 });
-
 		if (submit) {
+			date	= get_date({ day: -1, month: -1, year: 0 });
 			subData	= { dateStart: date, status: "Valid", };
-			Axios.get("/api/leads/readQuery", { params : { subData }, })
+			Axios.get("/leads/readQuery", { params : { subData }, })
 				.then((response) => { setLeadsAccept(response.data); });
 			subData	= { dateStart: date, status: "Invalid", };
-			Axios.get("/api/leads/readQuery", { params : { subData }, })
+			Axios.get("/leads/readQuery", { params : { subData }, })
 				.then((response) => { setLeadsReject(response.data); });
 			setSubmit(false);
 		}
 
-		Axios.get("/api/leads/readDestinataires")
+		Axios.get("/leads/readDestinataires")
 			.then((response) => { setDestinataires(response.data); });
-		Axios.get("/api/leads/readProvenances")
+		Axios.get("/leads/readProvenances")
 			.then((response) => { setProvenances(response.data); });
 	}, [submit]);
 
@@ -55,9 +46,9 @@ function	Home() {
 	}
 
 	return (
-		<div>
+		<div id="home">
 			<p>
-				Leads data from {get_date({ day: 0, month: -1, year: 0 })}
+				Leads data from {get_date({ day: 0, month: 0, year: 0 })}
 			</p>
 			<div id="head">
 				<span onClick={() => { toggleModule("accept"); }}>A: {leadsAccept?.length}</span>

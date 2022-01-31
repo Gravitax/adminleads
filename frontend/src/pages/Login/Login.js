@@ -1,32 +1,34 @@
-import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
+import React, { useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import Axios from "axios";
 
-import { check_page_access } from "../../modules/functions";
+import AuthContext from "../../contexts/AuthContext";
+import * as Auth from "../../modules/auth";
 
 import "./Login.css";
 
 
 function	Login() {
-	const	history = useHistory();
+	const	navigate = useNavigate();
 
-	if (check_page_access(false) === false)
-		history.push("/");
+	if (Auth.get())
+		navigate("/home");
 
-	
+
 	const	[username, setUsername]			= useState("");
 	const	[password, setPassword]			= useState("");
 	const	[loginStatus, setLoginStatus]	= useState("");
 
-	const	userLogin = () => {
-		Axios.post("/api/auth/login", {
-			username	: username,
-			password	: password,
-		})
+	const	{ setUser } = useContext(AuthContext);
+
+	const	userLogin = (e) => {
+		e.preventDefault();
+		Axios.post("/auth/login", { username, password })
 			.then((response) => {
 				if (response.data.token) {
-					localStorage.setItem("auth_token", response.data.token);
-					history.push("/");
+					Auth.set(response.data.token);
+					setUser(Auth.get());
+					navigate("/home");
 				}
 				else {
 					setLoginStatus(response.data.message);
@@ -35,20 +37,20 @@ function	Login() {
 	};
 
 	return (
-		<div className="login">
+		<div id="login">
 			<h1>Login</h1>
-			<div className="login_form">
-				<input type="text" name="username" placeholder="Username"
-					onChange={(e) => { setUsername(e.target.value); }}
+			<form>
+				<input type="text" name="username" placeholder="Username" autoComplete="off"
+					onChange={(e) => setUsername(e.target.value)}
 				/>
-				<input type="password" name="password" placeholder="Password"
-					onChange={(e) => { setPassword(e.target.value); }}
+				<input type="password" name="password" placeholder="Password" autoComplete="off"
+					onChange={(e) => setPassword(e.target.value)}
 				/>
 				<button onClick={userLogin}>LOGIN</button>
 				<div>
 					{loginStatus}
 				</div>
-			</div>
+			</form>
 		</div>
 	);
 }

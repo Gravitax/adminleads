@@ -1,48 +1,43 @@
 import React, { useEffect } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import Axios from "axios";
 import jwt_decode from "jwt-decode";
 import bcrypt from "bcryptjs";
 import { useForm, useController } from "react-hook-form";
 
-import { check_page_access } from "../../modules/functions";
-import { extractParamsUrl } from "../../modules/functions";
-import { regex_username } from "../../modules/functions";
+import { extractParamsUrl, regex_username } from "../../modules/functions";
+import * as Auth from "../../modules/auth";
 
 import "./Account.css";
 
 
-function	Account(props) {
-	const	history 	= useHistory();
-	const	token		= localStorage.getItem("auth_token");
-	let		dToken		= jwt_decode(token);
-	
-	if (!dToken || check_page_access(true) === false)
-		history.push("/");
+function	Account() {
+	const	navigate 	= useNavigate();
+	const	token		= Auth.get();
 
-	const	get_params	= extractParamsUrl(props.location.search);
-	const	username	= get_params["username"] || dToken.username;
+	const	location	= useLocation();
+	const	get_params	= extractParamsUrl(location?.search);
+	const	username	= get_params["username"] || token.username;
 
-	if (get_params["username"] && check_page_access(true, 1) === false
-			&& get_params["username"] !== dToken.username)
-		history.push(`/account?username=${dToken.username}`);
+	if (get_params["username"] && token?.role > 0
+			&& get_params["username"] !== token.username)
+		navigate(`/account?username=${token.username}`);
 
 	const	{ register, handleSubmit, setError, control, formState, }	= useForm();
 	const	{ isSubmitting, errors, }	= formState;
 
 	const	update_user	= (data, user) => {
-		Axios.put(`api/users/update`, { token: token, data: { ...data, username, role : dToken.role, }, })
+		Axios.put(`/users/update`, { data: { ...data, username, role : token.role, }, })
 			.then((response) => {
 				if (response.data.token) {
-					if (user.username === dToken.username) {
-						// on renew le token si c'est l'user actuel qui est update
-						localStorage.setItem("auth_token", response.data.token);
-						dToken = jwt_decode(response.data.token);
+					if (user.username === token.username) {
+						Auth.set(response.data.token);
+						token = Auth.get();
 					}
 					if (data.new_username)
-						history.push(`/account?username=${data.new_username}`);
+						navigate(`/account?username=${data.new_username}`);
 					else
-						history.push(`/account?username=${user.username}`);
+						navigate(`/account?username=${user.username}`);
 				}
 			});
 
@@ -50,7 +45,7 @@ function	Account(props) {
 
 	const	user_already_in_use = (data, user) => {
 		return (
-			Axios.get(`/api/users/readOne/${data.new_username}`, { params : { token } })
+			Axios.get(`/users/readOne/${data.new_username}`)
 				.then((response) => {
 					if (response.data.length > 0 || data.new_username === user.username) {
 						setError("new_username", { type	: "manual", message	: "new username is already in use", });
@@ -97,18 +92,18 @@ function	Account(props) {
 		if (!data.new_username && !data.new_role && !data.new_password)
 			return ;
 		if (data.password) {
-			Axios.get(`/api/users/readOne/${username}`, { params : { token } })
+			Axios.get(`/users/readOne/${username}`)
 				.then((response) => {
 					let	user	= jwt_decode(response.data);
 
 					// on verifie que l'user qui update rentre le bon mdp
-					bcrypt.compare(data.password, dToken.password)
+					bcrypt.compare(data.password, token.password)
 						.then(async (response) => {
 							let	tmp = await check_input(data, user).then((v) => { return (v); })
 
 							if (tmp === true && response === true) {
 								// le pwd est en clair donc on le hash
-								data.password = dToken.password;
+								data.password = token.password;
 								update_user(data, user);
 							}
 							else if (response === false) {
@@ -143,27 +138,29 @@ function	Account(props) {
 
 	useEffect(() => {
 		// au chargement on vérifie que l'username existe
-		Axios.get(`/api/users/readOne/${username}`, { params : { token } })
+		Axios.get(`/users/readOne/${username}`)
 			.then((response) => {
 				if (!response.data || response.data.length < 1)
-					history.push(`/account?username=${dToken.username}`);
+					navigate(`/account?username=${token.username}`);
 			});
-	}, [username, token, history, dToken]);
+	}, [username, token, navigate]);
 
 	return (
-		<div>
+		<div className="account">
 			<form onSubmit={handleSubmit(onSubmit)}>
 				<h3>{username}</h3>
 
 				<Input control={control} className="my_input" name="new_username" type="text" placeholder="new username"></Input>
 				{errors.new_username && <b className="error_message">{errors.new_username.message}</b>}
 
-				{ dToken.role === 1 &&
+				{ token.role === 0 &&
 					<div className="my_input">
 						<select {...register("new_role")}>
 							<option value=""> Role </option>
-							<option value="0"> Default </option>
-							<option value="1"> Admin </option>
+							<option value="0"> Admin </option>
+							<option value="1"> Markus </option>
+							<option value="2"> Media </option>
+							<option value="3"> Clients </option>
 						</select>
 					</div>
 				}

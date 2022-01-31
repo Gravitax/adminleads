@@ -1,6 +1,3 @@
-import jwt_decode from "jwt-decode";
-
-
 export const	regex_username	= (username) => {
 	const	regex	= /^[0-9A-ZÀÁÂÄÇÈÉÊËÌÍÎÏÑÒÓÔÖÙÚÛÜa-zàáâäçèéêëìíîïñòóôöùúûü-]{2,}$/;
 
@@ -30,27 +27,7 @@ export const	get_date = (data = {}, separator = '-') => {
 	let	month	= newDate.getMonth() + data?.month;
 	let	year	= newDate.getFullYear() + data?.year;
 
+	date = date < 0 ? 0 : date;
+	month = month < 0 ? 0 : month;
 	return (`${year}${separator}${month < 10 ? `0${month}` : `${month}`}${separator}${date}`);
 }
-
-/**
-*  @param {boolean} logged
-*  @param {number} role
-*/
-
-export const	check_page_access = (logged = undefined, role = undefined) => {
-	const	token	= localStorage.getItem("auth_token");
-	const	dToken	= token && jwt_decode(token);
-	
-	if (logged === undefined)
-		return (true);
-	if (dToken && logged === false)
-		return (false);
-	if (!dToken && logged === true)
-		return (false);
-	if (role === undefined)
-		return (true);
-	if (!dToken || dToken.role !== role)
-		return (false);
-	return (true);
-};

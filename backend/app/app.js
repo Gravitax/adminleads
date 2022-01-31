@@ -1,38 +1,26 @@
-const	express 		= require("express");
-const	path			= require("path");
-const	cors			= require("cors");
-
-const	authRoutes		= require("../routes/auth");
-const	usersRoutes		= require("../routes/users");
-const	leadsRoutes		= require("../routes/leads");
-
-const	app 			= express();
+const	express = require("express");
+const	cors	= require("cors");
 
 
-// cors to allow cross origin request
-app.use(cors({
-	origin		: ["http://localhost:3000"],
-	methods		: ["GET", "POST"],
-	credentials	: true,
-}));
+const	app = express();
 
-// parse application/json
 app.use(express.json({ limit: "100mb" }));
-// parse application/x-www-form-urlencoded
 app.use(express.urlencoded({ limit: "100mb", parameterLimit: 50000, extended: true, }));
 
-// set the front as static repository
-app.use(express.static("../frontend/build"));
+const	cors_options = {
+	origin					: "https://admin-lead.agence-markus.com",
+	credentials				: true,
+	// optionsSuccessStatus	: 200,
+}
+app.use(cors(cors_options));
 
-// déclaration des différentes routes de l'API
-app.use("/api/auth", authRoutes);
-app.use("/api/users", usersRoutes);
-app.use("/api/leads", leadsRoutes);
+const	route_auth	= require("./routes/auth");
+const	route_leads	= require("./routes/leads");
+const	route_users	= require("./routes/users");
 
-// redirect api path to front path
-app.get("/*", (req, res, next) => {
-	res.sendFile(path.join(__dirname, "../../frontend/build/index.html"));
-});
+app.use("/auth", route_auth);
+app.use("/leads", route_leads);
+app.use("/users", route_users);
 
 
 module.exports = app;
