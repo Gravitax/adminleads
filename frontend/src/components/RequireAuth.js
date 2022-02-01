@@ -4,8 +4,8 @@ import * as Auth from "../modules/auth"
 
 
 const	RequireAuth = ({ allowedRoles = [] }) => {
-	const	token	= Auth.get();
-	let		access	= allowedRoles.length === 0 ? true : false;
+	const	token		= Auth.get();
+	let		access		= allowedRoles.length === 0 ? true : false;
 
 	if (!token)
 		access = false;
@@ -17,7 +17,7 @@ const	RequireAuth = ({ allowedRoles = [] }) => {
 			}
 		}
 	}
-	return (access ? <Outlet /> : <Navigate to="/login" />);
+	return (access ? <Outlet /> : <Navigate to="/public/login" />);
 };
 
 

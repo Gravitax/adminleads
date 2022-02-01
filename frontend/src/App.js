@@ -2,8 +2,8 @@ import { Routes, Route } from "react-router-dom";
 
 import "./App.css";
 
-import Navbar from "./components/Navbar/Navbar";
 import Layout from "./components/Layout";
+import Navbar from "./components/Navbar/Navbar";
 import RequireAuth from "./components/RequireAuth"
 
 import Home from "./pages/Home/Home";
@@ -33,19 +33,18 @@ function	App() {
 			<Routes>
 				<Route path="/" element={<Layout />}>
 					{/* public routes */}
-					<Route path="/"			element={<Login />} />
-					<Route path="/login"	element={<Login />} />
+					<Route path="/public/login"	element={<Login />} />
 
-					{/* logged routes */}
+					{/* log required routes */}
 					<Route element={<RequireAuth />}>
-						<Route path="/home"		element={<Home />} />
-						<Route path="/leads"	element={<Leads />} />
-						<Route path="/account"	element={<Account />} />
+						<Route path="/private/home"		element={<Home />} />
+						<Route path="/private/leads"	element={<Leads />} />
+						<Route path="/private/account"	element={<Account />} />
 
-						{/* protected routes */}
+						{/* auth required routes */}
 						<Route element={<RequireAuth allowedRoles={[roles.Admin, roles.Markus]} />}>
-							<Route path="/users" element={<Users />} />
-							<Route path="/users/register"	element={<Register />} />
+							<Route path="/private/users"			element={<Users />} />
+							<Route path="/private/users/register"	element={<Register />} />
 						</Route>
 					</Route>
 

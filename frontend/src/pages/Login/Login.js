@@ -12,7 +12,7 @@ function	Login() {
 	const	navigate = useNavigate();
 
 	if (Auth.get())
-		navigate("/home");
+		navigate("/private/home");
 
 
 	const	[username, setUsername]			= useState("");
@@ -28,7 +28,7 @@ function	Login() {
 				if (response.data.token) {
 					Auth.set(response.data.token);
 					setUser(Auth.get());
-					navigate("/home");
+					navigate("/private/home");
 				}
 				else {
 					setLoginStatus(response.data.message);

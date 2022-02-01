@@ -17,26 +17,26 @@ function	Navbar() {
 	const	disconnect	= () => {
 		Auth.remove();
 		setUser({});
-		navigate("/login");
+		navigate("/public/login");
 	};
 
 	return (
 		<div className="navbar">
-			<NavLink exact to="/home" activeClassName="active">
+			<NavLink exact to="/private/home" activeClassName="active">
 				Home
 			</NavLink>
-			<NavLink exact to="/leads" activeClassName="active">
+			<NavLink exact to="/private/leads" activeClassName="active">
 				Leads
 			</NavLink>
 			{ Auth.isAllowed([0, 1]) &&
-				<NavLink exact to="/users" activeClassName="active">
+				<NavLink exact to="/private/users" activeClassName="active">
 					Users
 				</NavLink>
 			}
 			<div className={"navbar_picto" + (classActive ? " active" : "")}
 				onClick={() => { setClassActive(classActive ? 0 : 1); }}>
 				<div className="navbar_collapse">
-					<NavLink exact to={"/account?username=" + user.username} activeClassName="active">
+					<NavLink exact to={"/private/account?username=" + user.username} activeClassName="active">
 						Account
 					</NavLink>
 					<span onClick={disconnect}>Disconnect</span>
