@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Axios from "axios";
 
+import { path_routes } from "../../config";
+
 import "./Users.css";
 
 
@@ -21,13 +23,13 @@ function	Users() {
 	};
 
 	const	userUpdate = (username) => {
-		navigate(`/account?username=${username}`);
+		navigate(`${path_routes.account}?username=${username}`);
 	};
 
 	return (
 		
 		<div id="users">
-			<b id="create" onClick={() => navigate("/users/register")}> Create User </b>
+			<b id="create" onClick={() => navigate(path_routes.register)}> Create User </b>
 			<br /><br />
 			<b> Users list: </b>
 			<br /><br />

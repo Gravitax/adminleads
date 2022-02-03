@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Axios from "axios";
 
+import { path_routes } from "../../../config";
 import { regex_username, regex_password } from "../../../modules/functions";
 
 import "./Register.css";
@@ -24,7 +25,7 @@ function	Register() {
 			.then((response) => {
 				setRegisterStatus(response.data.message);
 				if (response.data && response.data.exist !== true)
-					navigate("/users");
+					navigate(path_routes.users);
 			});
 	};
 

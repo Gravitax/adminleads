@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Axios from "axios";
 
 import AuthContext from "../../contexts/AuthContext";
-import * as Auth from "../../modules/auth";
+import * as config from "../../config";
 
 import "./Login.css";
 
@@ -11,8 +11,8 @@ import "./Login.css";
 function	Login() {
 	const	navigate = useNavigate();
 
-	if (Auth.get())
-		navigate("/private/home");
+	if (config.Auth.get())
+		navigate(config.path_routes.home);
 
 
 	const	[username, setUsername]			= useState("");
@@ -26,9 +26,9 @@ function	Login() {
 		Axios.post("/auth/login", { username, password })
 			.then((response) => {
 				if (response.data.token) {
-					Auth.set(response.data.token);
-					setUser(Auth.get());
-					navigate("/private/home");
+					config.Auth.set(response.data.token);
+					setUser(config.Auth.get());
+					navigate(config.path_routes.home);
 				}
 				else {
 					setLoginStatus(response.data.message);

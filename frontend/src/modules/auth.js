@@ -17,7 +17,7 @@ export const	isExp = (dToken) => {
 		return (true);
 	const	date	= new Date().getTime() / 1000;
 
-	return (dToken?.exp - date < 0);
+	return (dToken.exp - date < 0);
 };
 
 export const	get = () => {

@@ -1,12 +1,14 @@
 import { Navigate, Outlet } from "react-router-dom";
 
-import * as Auth from "../modules/auth"
+import * as config from "../config"
 
 
-const	RequireAuth = ({ allowedRoles = [] }) => {
-	const	token		= Auth.get();
-	let		access		= allowedRoles.length === 0 ? true : false;
+const	RequireAuth = ({ allowedRoles = [], auth = true }) => {
+	const	token		= config.Auth.get();
+	let		access		= !allowedRoles.length ? true : false;
 
+	if (!auth)
+		return (token ? <Navigate to={config.path_routes.home} /> : <Outlet />);
 	if (!token)
 		access = false;
 	else if (allowedRoles.length > 0) {
@@ -17,7 +19,7 @@ const	RequireAuth = ({ allowedRoles = [] }) => {
 			}
 		}
 	}
-	return (access ? <Outlet /> : <Navigate to="/public/login" />);
+	return (access ? <Outlet /> : <Navigate to={config.path_routes.login} />);
 };
 
 
