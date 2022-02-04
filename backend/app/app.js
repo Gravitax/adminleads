@@ -1,5 +1,5 @@
-const	express = require("express");
-const	cors	= require("cors");
+const	express 	= require("express");
+const	cors		= require("cors");
 
 
 const	app = express();
@@ -13,6 +13,10 @@ const	cors_options = {
 	// optionsSuccessStatus	: 200,
 }
 app.use(cors(cors_options));
+
+// const	sequelize	= require("../modules/database");
+
+// sequelize.sync({ force : true });
 
 const	route_auth	= require("./routes/auth");
 const	route_leads	= require("./routes/leads");

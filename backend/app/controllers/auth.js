@@ -26,6 +26,15 @@ exports.login = (req, res, next) => {
 	);
 };
 
+// const	Users		= require("../models/Users");
+
+// exports.login = (req, res, next) => {
+// 	Users.create({
+// 		email		: "tart@ampion.fr",
+// 		password	: "incroyable"
+// 	});
+// };
+
 exports.register = async (req, res, next) => {
 	const	username	= req.body.username;
 	const	password	= req.body.password;
