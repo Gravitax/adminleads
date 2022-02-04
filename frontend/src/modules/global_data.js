@@ -1,8 +1,8 @@
-import * as Auth from "./modules/auth";
+import * as auth from "./auth";
 
 
 const	path_routes = {
-	"login"		: "/public",
+	"login"		: "/",
 	"home"		: "/private",
 	"leads"		: "/private/leads",
 	"account"	: "/private/account",
@@ -21,5 +21,5 @@ const	roles = {
 export {
 	path_routes,
 	roles,
-	Auth
+	auth
 };

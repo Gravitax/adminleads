@@ -1,26 +1,26 @@
 import { createContext, useState } from "react";
 import Axios from "axios";
 
-import * as Auth from "../modules/auth";
+import { auth } from "../modules/global_data";
 
 
 const	AuthContext = createContext({});
 
 const	auth_init = () => {
-	const	[token, dToken, isExp] = Auth.data();
+	const	{ token, dToken, isExp } = auth.data();
 
 	Axios.defaults.baseURL = "https://api.admin-lead.agence-markus.com";
 	if (isExp === true) {
-		Auth.remove();
+		auth.remove();
 	}
 	else if (dToken) {
-		Auth.set(token);
+		auth.set(token);
 	}
 };
 
 export const	AuthProvider = ({ children }) => {
 	auth_init();
-	const	token = Auth.get();
+	const	token = auth.get();
 	const	[user, setUser] = useState(token);
 
 	return (

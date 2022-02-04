@@ -2,17 +2,17 @@ import Axios from "axios";
 import jwt_decode from "jwt-decode";
 
 
-export const	set = (token) => {
+const	set = (token) => {
 	localStorage.setItem("auth_token", token);
 	Axios.defaults.headers.common["auth_token"] = `${token}`;
 };
 
-export const	remove = () => {
+const	remove = () => {
 	localStorage.removeItem("auth_token");
 	Axios.defaults.headers.common["auth_token"] = null;
 };
 
-export const	isExp = (dToken) => {
+const	isExp = (dToken) => {
 	if (!dToken)
 		return (true);
 	const	date	= new Date().getTime() / 1000;
@@ -20,15 +20,16 @@ export const	isExp = (dToken) => {
 	return (dToken.exp - date < 0);
 };
 
-export const	get = () => {
+const	get = () => {
 	const	token	= localStorage.getItem("auth_token");
 	const	dToken	= token && jwt_decode(token);
 
 	return (isExp(dToken) ? null : dToken);
 };
 
-export const	isAllowed = (allowedRoles = []) => {
-	let	dToken = get();
+const	isAllowed = (allowedRoles = []) => {
+	const	dToken = get();
+
 	if (!dToken)
 		return (false);
 	if (allowedRoles.length < 1)
@@ -40,9 +41,18 @@ export const	isAllowed = (allowedRoles = []) => {
 	return (false);
 };
 
-export const	data = () => {
+const	data = () => {
 	const	token	= localStorage.getItem("auth_token");
 	const	dToken	= token && jwt_decode(token);
 
-	return ([token, dToken, isExp(dToken)]);
+	return ({ token, dToken, isExp : isExp(dToken) });
 };
+
+export {
+	set,
+	remove,
+	isExp,
+	get,
+	isAllowed,
+	data
+}

@@ -2,7 +2,7 @@ import React, { useState, useContext } from "react";
 import { useNavigate, Link } from "react-router-dom";
 
 import AuthContext from "../../contexts/AuthContext";
-import * as config from "../../config";
+import * as gd from "../../modules/global_data";
 
 import "./Navbar.css";
 
@@ -14,28 +14,28 @@ function	Navbar() {
 
 	const	navigate	= useNavigate();
 	const	disconnect	= () => {
-		config.Auth.remove();
+		gd.auth.remove();
 		setUser({});
-		navigate(config.path_routes.login);
+		navigate(gd.path_routes.login);
 	};
 
 	return (
 		<div className="navbar">
-			<Link to={config.path_routes.home}>
+			<Link to={gd.path_routes.home}>
 				Home
 			</Link>
-			<Link to={config.path_routes.leads}>
+			<Link to={gd.path_routes.leads}>
 				Leads
 			</Link>
-			{ config.Auth.isAllowed([0, 1]) &&
-				<Link to={config.path_routes.users}>
+			{ gd.auth.isAllowed([0, 1]) &&
+				<Link to={gd.path_routes.users}>
 					Users
 				</Link>
 			}
 			<div className={"navbar_picto" + (classActive ? " active" : "")}
 				onClick={() => { setClassActive(classActive ? 0 : 1); }}>
 				<div className="navbar_collapse">
-					<Link to={`${config.path_routes.account}?username=${user?.username}`}>
+					<Link to={`${gd.path_routes.account}?username=${user?.username}`}>
 						Account
 					</Link>
 					<span onClick={disconnect}>Disconnect</span>

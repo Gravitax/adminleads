@@ -1,6 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 
-import RequireAuth from "../components/RequireAuth"
+import AuthMiddleware from "../components/AuthMiddleware"
 import Navbar from "../components/Navbar/Navbar";
 
 import Home from "../pages/Home/Home";
@@ -9,7 +9,7 @@ import Leads from "../pages/Leads/Leads";
 import Users from "../pages/Users/Users";
 import Register from "../pages/Users/Register/Register";
 
-import { roles } from "../config";
+import { roles } from "../modules/global_data";
 
 
 const	PrivateRoutes = () => {
@@ -17,21 +17,16 @@ const	PrivateRoutes = () => {
 		<>
 			<Navbar />
 			<Routes>
-				{/* private routes */}
-				<Route path="/*" element={<RequireAuth />}>
-					<Route index			element={<Home />} />
+				<Route path="/*" element={<AuthMiddleware />}>
 					<Route path="leads"		element={<Leads />} />
 					<Route path="account"	element={<Account />} />
 
 					{/* auth required routes */}
-					<Route path="users/*" element={<RequireAuth allowedRoles={[roles.Admin, roles.Markus]} />}>
-						<Route index			element={<Users />} />
+					<Route path="users/*" element={<AuthMiddleware allowedRoles={[roles.Admin, roles.Markus]} />}>
 						<Route path="register"	element={<Register />} />
-
-						<Route path="*" element={<Users />} />
+						<Route path="*"			element={<Users />} />
 					</Route>
 
-					{/* catch all */}
 					<Route path="*" element={<Home />} />
 				</Route>
 			</Routes>

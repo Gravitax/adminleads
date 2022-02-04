@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Axios from "axios";
 
 import Dropdown from "../../Dropdown/Dropdown";
-import { exportCSV } from "../../../../modules/exportCSV";
+import { export_csv } from "../../../../modules/export_csv";
 
 import "./Selected.css";
 
@@ -12,7 +12,7 @@ const	Selected = ({ ...data }) => {
 
 	function	handleAction() {
 		if (status?.action === "Exporter") {
-			exportCSV(data?.selected, "leads_list");
+			export_csv(data?.selected, "leads_list");
 		}
 		else {
 			Axios.post("/api/leads/update", { data, status })

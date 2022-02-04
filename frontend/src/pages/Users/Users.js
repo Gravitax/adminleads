@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Axios from "axios";
 
-import { path_routes } from "../../config";
+import { path_routes } from "../../modules/global_data";
 
 import "./Users.css";
 

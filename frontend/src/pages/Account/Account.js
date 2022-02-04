@@ -6,14 +6,14 @@ import bcrypt from "bcryptjs";
 import { useForm, useController } from "react-hook-form";
 
 import { extractParamsUrl, regex_username } from "../../modules/functions";
-import * as config from "../../config";
+import * as gd from "../../modules/global_data";
 
 import "./Account.css";
 
 
 function	Account() {
 	const	navigate 	= useNavigate();
-	const	token		= config.Auth.get();
+	const	token		= gd.auth.get();
 
 	const	location	= useLocation();
 	const	get_params	= extractParamsUrl(location?.search);
@@ -21,7 +21,7 @@ function	Account() {
 
 	if (get_params["username"] && token?.role > 0
 			&& get_params["username"] !== token.username)
-		navigate(`${config.path_routes.account}?username=${token.username}`);
+		navigate(`${gd.path_routes.account}?username=${token.username}`);
 
 	const	{ register, handleSubmit, setError, control, formState, }	= useForm();
 	const	{ isSubmitting, errors, }	= formState;
@@ -31,13 +31,13 @@ function	Account() {
 			.then((response) => {
 				if (response.data.token) {
 					if (user.username === token.username) {
-						config.Auth.set(response.data.token);
-						token = config.Auth.get();
+						gd.auth.set(response.data.token);
+						token = gd.auth.get();
 					}
 					if (data.new_username)
-						navigate(`${config.path_routes.account}?username=${data.new_username}`);
+						navigate(`${gd.path_routes.account}?username=${data.new_username}`);
 					else
-						navigate(`${config.path_routes.account}?username=${user.username}`);
+						navigate(`${gd.path_routes.account}?username=${user.username}`);
 				}
 			});
 
@@ -141,7 +141,7 @@ function	Account() {
 		Axios.get(`/users/readOne/${username}`)
 			.then((response) => {
 				if (!response.data || response.data.length < 1)
-					navigate(`${config.path_routes.account}?username=${token.username}`);
+					navigate(`${gd.path_routes.account}?username=${token.username}`);
 			});
 	}, [username, token, navigate]);
 

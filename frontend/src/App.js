@@ -1,28 +1,17 @@
 import { Routes, Route } from "react-router-dom";
 
+import PublicLayout from "./components/PublicLayout";
+import PrivateLayout from "./components/PrivateLayout";
+
 import "./App.css";
 
-import Layout from "./components/Layout";
 
-import PublicRoutes from "./routes/PublicRoutes";
-import PrivateRoutes from "./routes/PrivateRoutes";
-
-
-function	App() {
+const	App = () => {
 	return (
-		<>
-			<Routes>
-				<Route path="/*" element={<Layout />}>
-
-					<Route path="public/*" element={<PublicRoutes />} />
-
-					<Route path="private/*" element={<PrivateRoutes />} />
-
-					{/* catch all */}
-					<Route path="*" element={<PublicRoutes />} />
-				</Route>
-			</Routes>
-		</>
+		<Routes>
+			<Route path="private/*" element={<PrivateLayout />} />
+			<Route path="*" element={<PublicLayout />} />
+		</Routes>
 	);
 }
 
