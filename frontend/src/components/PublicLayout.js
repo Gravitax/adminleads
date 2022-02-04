@@ -5,7 +5,7 @@ import AuthMiddleware from "../components/AuthMiddleware"
 import Login from "../pages/Login/Login";
 
 
-const	PublicRoutes = () => {
+const	PublicLayout = () => {
 	return (
 		<Routes>
 			<Route path="/*" element={<AuthMiddleware auth={false} />}>
@@ -16,4 +16,4 @@ const	PublicRoutes = () => {
 };
 
 
-export default PublicRoutes;
+export default PublicLayout;
