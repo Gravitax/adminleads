@@ -12,7 +12,7 @@ import Register from "../pages/Users/Register/Register";
 import { roles } from "../modules/global_data";
 
 
-const	PrivateRoutes = () => {
+const	PrivateLayout = () => {
 	return (
 		<>
 			<Navbar />
@@ -35,4 +35,4 @@ const	PrivateRoutes = () => {
 };
 
 
-export default PrivateRoutes;
+export default PrivateLayout;
