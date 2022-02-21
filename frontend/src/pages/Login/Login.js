@@ -11,11 +11,7 @@ import "./Login.css";
 function	Login() {
 	const	navigate = useNavigate();
 
-	if (gd.auth.get())
-		navigate(gd.path_routes.home);
-
-
-	const	[username, setUsername]			= useState("");
+	const	[email, setEmail]				= useState("");
 	const	[password, setPassword]			= useState("");
 	const	[loginStatus, setLoginStatus]	= useState("");
 
@@ -23,7 +19,7 @@ function	Login() {
 
 	const	userLogin = (e) => {
 		e.preventDefault();
-		Axios.post("/auth/login", { username, password })
+		Axios.post("/auth/login", { email, password })
 			.then((response) => {
 				if (response.data.token) {
 					gd.auth.set(response.data.token);
@@ -40,8 +36,8 @@ function	Login() {
 		<div id="login">
 			<h1>Login</h1>
 			<form>
-				<input type="text" name="username" placeholder="Username" autoComplete="off"
-					onChange={(e) => setUsername(e.target.value)}
+				<input type="text" name="email" placeholder="Email" autoComplete="off"
+					onChange={(e) => setEmail(e.target.value)}
 				/>
 				<input type="password" name="password" placeholder="Password" autoComplete="off"
 					onChange={(e) => setPassword(e.target.value)}

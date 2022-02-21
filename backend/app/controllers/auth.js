@@ -1,62 +1,45 @@
 const	bcrypt	= require("bcryptjs");
 
-const	db		= require("../modules/db");
+const	db		= require("../models/init");
 const	token	= require("../modules/token");
 
 
 exports.login = (req, res, next) => {
-	const	username	= req.body.username;
+	const	email		= req.body.email;
 	const	password	= req.body.password;
 
-	if (!username || !password) return ;
-	db.query("SELECT * FROM users WHERE username = ?", [username],
-		(error, results) => {
-			if (error) res.status(500);
-			if (results && results.length > 0) {
-				// on compare le mdp en clair et le mdp hash
-				if (bcrypt.compareSync(password, results[0].password))
-					res.json({ message: `user: " ${username} " logged in`, token : token(results[0]) });
-				else
-					res.json({ message: `user: " ${username} " unvalid password` } );
-			}
-			else {
-				res.json({ message: `user: " ${username} " not found` });
-			}
-		}
-	);
+	if (!email || !password) return ;
+	db.User.findOne({ where : { email : email } })
+		.then((user) => {
+			if (bcrypt.compareSync(password, user.password))
+				res.json({ message: `user: " ${email} " logged in`, token : token(user) });
+			else
+				res.json({ message: `user: " ${email} " unvalid password` } );
+		})
+		.catch(() => {
+			res.json({ message: `user: " ${email} " not found` });
+		});
 };
 
-// const	Users		= require("../models/Users");
-
-// exports.login = (req, res, next) => {
-// 	Users.create({
-// 		email		: "tart@ampion.fr",
-// 		password	: "incroyable"
-// 	});
-// };
-
-exports.register = async (req, res, next) => {
-	const	username	= req.body.username;
+exports.register = (req, res, next) => {
+	const	email		= req.body.email;
 	const	password	= req.body.password;
 
-	if (!username || !password) return ;
+	if (!email || !password) return ;
 	// on verifie que l'user n'est pas déjà dans la DB
-	db.query("SELECT username FROM users WHERE username = ?", [username],
-		(error, results) => {
-			if (error) res.status(500);
-			if (results && results.length > 0) {
-				res.json({ message: `user: " ${username} " already exist`, exist: true });
+	db.User.findOne({ where : { email : email } })
+		.then((user) => {
+			if (user?.email?.length > 0) {
+				res.json({ message: `user: " ${email} " already exist` });
 			}
 			else {
 				// si ce n'est pas le cas on peut l'insert
-				db.query("INSERT INTO users (username, password, role) VALUES (?, ?, 1)",
-					[username, bcrypt.hashSync(password, 10)],
-					(error) => {
-						if (error) res.status(500);
-						res.json({ message: `user: " ${username} " registered succesfully` });
-					},
-				);
+				db.User.create({
+					email		: email,
+					password	: bcrypt.hashSync(password, 10)
+				});
+				res.json({ message: `user: " ${email} "has been created.` });
 			}
-		}
-	);
+		})
+		.catch(() => res.status(500));
 };

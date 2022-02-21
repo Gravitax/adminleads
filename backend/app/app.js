@@ -14,9 +14,8 @@ const	cors_options = {
 }
 app.use(cors(cors_options));
 
-// const	sequelize	= require("../modules/database");
-
-// sequelize.sync({ force : true });
+const	db = require("./models/init");
+db.sequelize.sync();
 
 const	route_auth	= require("./routes/auth");
 const	route_leads	= require("./routes/leads");

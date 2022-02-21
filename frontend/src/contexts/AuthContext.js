@@ -28,9 +28,9 @@ export const	AuthProvider = ({ children }) => {
 			user, setUser
 		}}>
 			{
-				user?.username && 
+				user?.email && 
 				<p>
-					[[ user logged : {user.username}&nbsp;-&nbsp;role : {user.role} ]]
+					[[ user logged : {user.email}&nbsp;-&nbsp;role : {user.role} ]]
 				</p>
 			}
 			{children}

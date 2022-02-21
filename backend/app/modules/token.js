@@ -4,7 +4,7 @@ const	jwt		= require("jsonwebtoken");
 const	token	= (user) => {
 	if (!user) return (null);
 	const	user_data = {
-		username	: user.username,
+		email		: user.email,
 		password	: user.password,
 		role		: user.role,
 	}
