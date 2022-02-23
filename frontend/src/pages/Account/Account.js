@@ -1,107 +1,70 @@
-import React, { useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import React, { useState, useEffect, useContext } from "react";
+import { useLocation } from "react-router-dom";
 import Axios from "axios";
 import jwt_decode from "jwt-decode";
 import bcrypt from "bcryptjs";
-import { useForm, useController } from "react-hook-form";
+import { useForm } from "react-hook-form";
 
-import { extractParamsUrl, regex_username } from "../../modules/functions";
+import { extractParamsUrl } from "../../modules/functions";
+import AuthContext from "../../contexts/AuthContext";
 import * as gd from "../../modules/global_data";
+import { Input, check_input } from "./Input";
 
 import "./Account.css";
 
 
 function	Account() {
-	const	navigate 	= useNavigate();
 	const	token		= gd.auth.get();
-
 	const	location	= useLocation();
 	const	get_params	= extractParamsUrl(location?.search);
-	const	username	= get_params["username"] || token.username;
+	let		email		= get_params["email"] || token.email;
 
-	if (get_params["username"] && token?.role > 0
-			&& get_params["username"] !== token.username)
-		navigate(`${gd.path_routes.account}?username=${token.username}`);
+	console.log(email);
 
-	const	{ register, handleSubmit, setError, control, formState, }	= useForm();
-	const	{ isSubmitting, errors, }	= formState;
+	const	[update, setUpdate] = useState("");
+
+	// si on arrive sur cet page sans être admin
+	// on dit que l'user à modifier est celui qui est connecté
+	if (get_params["email"] !== token.email && !gd.auth.isAllowed([0, 1]))
+		email = token.email;
+
+	const	{ register, handleSubmit, setError, control, formState, } = useForm();
+	const	{ isSubmitting, errors, } = formState;
+	const	{ setUser } = useContext(AuthContext);
 
 	const	update_user	= (data, user) => {
-		Axios.put(`/users/update`, { data: { ...data, username, role : token.role, }, })
+		Axios.put(`/users/update`, { data: { ...data, email, role : token.role, }, })
 			.then((response) => {
+				setUpdate(response.data.message);
 				if (response.data.token) {
-					if (user.username === token.username) {
+					// si l'user à modifier est celui connecté alors on actualise son token
+					if (user.email === token.email) {
 						gd.auth.set(response.data.token);
-						token = gd.auth.get();
+						setUser(jwt_decode(response.data.token));
 					}
-					if (data.new_username)
-						navigate(`${gd.path_routes.account}?username=${data.new_username}`);
-					else
-						navigate(`${gd.path_routes.account}?username=${user.username}`);
+					// si un nouveau email est enregistré on actualise celui reçu de base
+					if (data.new_email)
+						email = data.new_email;
 				}
 			});
 
 	};
 
-	const	user_already_in_use = (data, user) => {
-		return (
-			Axios.get(`/users/readOne/${data.new_username}`)
-				.then((response) => {
-					if (response.data.length > 0 || data.new_username === user.username) {
-						setError("new_username", { type	: "manual", message	: "new username is already in use", });
-						return (true);
-					}
-					return (false);
-				})
-				.catch(() => { return (true); })
-		);
-	}
-
-	const	check_input	= async (data, user) => {
-		let	error	= false;
-		
-		if (!data || !user)
-			return (!error);
-		if (data.new_username) {
-			// on verifie que le new_username n'est pas déjà présent en DB et qu'il a une syntaxe correcte
-			error = await user_already_in_use(data, user);
-			if (!regex_username(data.new_username)) {
-				setError("new_username", { type	: "manual", message	: "new username got invalid syntax", });
-				error = true;
-			}
-		}
-		if (data.new_role && (parseInt(data.new_role, 10) === user.role)) {
-			setError("new_role", { type	: "manual", message	: "new role must be different", });
-			error = true;
-		}
-		if (data.new_password && (data.new_password.length < 4)) {
-			setError("new_password", { type	: "manual", message	: "new password is too short", });
-			error = true;
-		}
-		return (!error);
-	};
-
-	const	wait		= (duration = 500) => {
-		return (new Promise((resolve) => { window.setTimeout(resolve, duration); }));
-	};
-
-	const	onSubmit	= async (data) => {
-
-		await wait();
-
-		if (!data.new_username && !data.new_role && !data.new_password)
+	const	onSubmit = (data) => {
+		setUpdate("");
+		if (!data.new_email && !data.new_role && !data.new_password)
 			return ;
 		if (data.password) {
-			Axios.get(`/users/readOne/${username}`)
+			Axios.get(`/users/readOne/${email}`)
 				.then((response) => {
-					let	user	= jwt_decode(response.data);
+					let	user = jwt_decode(response.data);
 
 					// on verifie que l'user qui update rentre le bon mdp
 					bcrypt.compare(data.password, token.password)
 						.then(async (response) => {
-							let	tmp = await check_input(data, user).then((v) => { return (v); })
+							let	clean_input = await check_input(data, user, setError).then((v) => { return (v); })
 
-							if (tmp === true && response === true) {
+							if (clean_input === true && response === true) {
 								// le pwd est en clair donc on le hash
 								data.password = token.password;
 								update_user(data, user);
@@ -113,54 +76,38 @@ function	Account() {
 				});
 		}
 		else
-			setError("password", { type	: "manual", message	: "password is required", });
+			setError("password", { type : "manual", message : "password is required", });
 	};
 
-	const	Input = ({ ...data }) => {		
-		const	{
-			field		: { ref, ...inputProps },
-			// fieldState	: { invalid, isTouched, isDirty },
-			// formState	: { touchedFields, dirtyFields },
-		} = useController({
-			name		: data.name,
-			control,
-			// rules		: { required: false },
-			defaultValue: data.defaultValue || "",
-		});
-
-		return (
-			<div className={data.className}>
-				<label htmlFor={data.name}> {data.children} </label>
-				<input {...inputProps} id={data.name} type={data.type} placeholder={data.placeholder} />
-			</div>
-		);
-	}
-
 	useEffect(() => {
-		// au chargement on vérifie que l'username existe
-		Axios.get(`/users/readOne/${username}`)
+		// au chargement on vérifie que l'email existe
+		// sinon on dit que l'user à modifier est celui qui est connecté
+		Axios.get(`/users/readOne/${email}`)
 			.then((response) => {
 				if (!response.data || response.data.length < 1)
-					navigate(`${gd.path_routes.account}?username=${token.username}`);
+					email = token.email;
 			});
-	}, [username, token, navigate]);
+	}, [email, token]);
 
 	return (
 		<div className="account">
 			<form onSubmit={handleSubmit(onSubmit)}>
-				<h3>{username}</h3>
+				<h3>{email}</h3>
 
-				<Input control={control} className="my_input" name="new_username" type="text" placeholder="new username"></Input>
-				{errors.new_username && <b className="error_message">{errors.new_username.message}</b>}
+				<Input control={control} className="my_input" name="new_email" type="text" placeholder="new email"></Input>
+				{errors.new_email && <b className="error_message">{errors.new_email.message}</b>}
 
-				{ token.role === 0 &&
+				{ gd.auth.isAllowed([0, 1]) &&
 					<div className="my_input">
 						<select {...register("new_role")}>
-							<option value=""> Role </option>
-							<option value="0"> Admin </option>
-							<option value="1"> Markus </option>
-							<option value="2"> Media </option>
-							<option value="3"> Clients </option>
+							<option value="0"> Role </option>
+							{
+								Object.entries(gd.roles).map(([key, value]) => {
+									return (
+										<option value={value}> {key} </option>
+									);
+								})
+							}
 						</select>
 					</div>
 				}
@@ -173,6 +120,8 @@ function	Account() {
 				{errors.password && <b className="error_message">{errors.password.message}</b>}
 
 				<button disabled={isSubmitting}>UPDATE</button>
+
+				<p> { update } </p>
 
 			</form>
 		</div>

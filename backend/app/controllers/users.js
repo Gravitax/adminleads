@@ -1,86 +1,58 @@
 const	bcrypt	= require("bcryptjs");
 
-const	db		= require("../modules/db");
+const	db		= require("../models/init");
 const	token	= require("../modules/token");
 
 
 exports.delete = (req, res, next) => {
-	const	username = req.params.username;
+	const	email = req.params.email;
 
-	if (!username) return ;
-	db.query("DELETE FROM users WHERE username = ?", [username],
-		(error, results) => {
-			if (error) res.status(500);
-			res.send(results);
-		}
-	);
+	if (!email) return ;
+	db.User.destroy({ where : { email : email } })
+		.then((response) => res.send(response))
+		.catch(() => res.status(500));
 };
 
 exports.read = (req, res, next) => {
-	db.query("SELECT * FROM users",
-		(error, results) => {
-			if (error) res.json({ error }).status(500);
-			res.send(results);
-		}
-	);
+	db.User.findAll()
+		.then((response) => {
+			res.send(response);
+		})
+		.catch(() => res.status(500));
 };
 
 exports.readOne = (req, res, next) => {
-	const	username	= req.params.username;
+	const	email	= req.params.email;
 
-	if (!username) return ;
-	db.query("SELECT * FROM users WHERE username = ?", [username],
-		(error, results) => {
-			if (error) res.status(500);
-			res.send(token(results[0]));
-		}
-	);
+	if (!email) return ;
+	db.User.findOne({ where : { email : email } })
+		.then((user) => {
+			res.send(token(user));
+		})
+		.catch(() => res.status(500));
 };
 
-async function	update_query(data) {
-	let	data_length = 0;
-
-	for (let value in data) {
-		if (data[value] && data[value].length > 0) ++data_length;
-	}
-
-	let	SQL_query = "UPDATE users SET";
-	if (data.new_username) {
-		SQL_query += ` username = "${data.new_username}"`;
-		SQL_query += `${data_length-- > 3 ? ',' : ''}`;
-	}
-	if (data.new_password) {
-		data.new_password = bcrypt.hashSync(data.new_password, 10);
-
-		SQL_query += ` password = "${data.new_password}"`;
-		SQL_query += `${data_length-- > 3 ? ',' : ''}`;
-	}
-	if (data.new_role) {
-		SQL_query += ` role = "${data.new_role}"`;
-		SQL_query += `${data_length-- > 3 ? ',' : ''}`;
-	}
-	SQL_query += ` WHERE username = "${data.username}"`;
-
-	return (SQL_query);
-}
-
-exports.update = async (req, res, next) => {
+exports.update = (req, res, next) => {
 	const	data		= req.body.data;
 
 	if (!data) return ;
+	if (data.new_password)
+		data.new_password = bcrypt.hashSync(data.new_password, 10);
 
-	let	SQL_query = await update_query(data);
+	const	new_user = {}
+	if (data.new_email)		new_user.email		= data.new_email;
+	if (data.new_password)	new_user.password	= data.new_password;
+	if (data.new_role)		new_user.role		= data.new_role;
 
-	db.query(SQL_query,
-		(error, results) => {
-			if (error) res.status(500);
-			res.send({ message : `${data.new_username || data.username} updated succesfully`,
+	db.User.update(new_user, { where : { email : data.email } })
+		.then(() => {
+			res.send({ message : `${data.new_email || data.email} updated succesfully`,
 				token : token({
-					username	: data.new_username || data.username,
-					password	: data.new_password || data.password,
-					role		: data.new_role || data.role,
+					email		: data.new_email	|| data.email,
+					password	: data.new_password	|| data.password,
+					role		: data.new_role		|| data.role,
 				}),
 			});
-		}
-	);
+		})
+		.catch(() => res.status(500));
 };

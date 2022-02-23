@@ -24,11 +24,12 @@ exports.login = (req, res, next) => {
 exports.register = (req, res, next) => {
 	const	email		= req.body.email;
 	const	password	= req.body.password;
+	const	role		= req.body.role;
 
 	if (!email || !password) return ;
-	// on verifie que l'user n'est pas déjà dans la DB
 	db.User.findOne({ where : { email : email } })
 		.then((user) => {
+			// on verifie que l'user n'est pas déjà dans la DB
 			if (user?.email?.length > 0) {
 				res.json({ message: `user: " ${email} " already exist` });
 			}
@@ -36,7 +37,8 @@ exports.register = (req, res, next) => {
 				// si ce n'est pas le cas on peut l'insert
 				db.User.create({
 					email		: email,
-					password	: bcrypt.hashSync(password, 10)
+					password	: bcrypt.hashSync(password, 10),
+					role		: role,
 				});
 				res.json({ message: `user: " ${email} "has been created.` });
 			}

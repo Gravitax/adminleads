@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Axios from "axios";
 
-import { path_routes } from "../../modules/global_data";
+import * as gd from "../../modules/global_data";
 
 import "./Users.css";
 
@@ -16,31 +16,36 @@ function	Users() {
 			.then((response) => { setUsersList(response.data); });
 	}, []);
 
-	const	userDelete = (username) => {
+	const	userDelete = (email) => {
 		// faire une demande de confirmation
-		Axios.delete(`/users/delete/${username}`)
-			.then(() => { navigate(0); });
+		Axios.delete(`/users/delete/${email}`);
+		navigate(0);
 	};
 
-	const	userUpdate = (username) => {
-		navigate(`${path_routes.account}?username=${username}`);
+	const	userUpdate = (email) => {
+		navigate(`${gd.path_routes.account}?email=${email}`);
 	};
 
 	return (
 		
 		<div id="users">
-			<b id="create" onClick={() => navigate(path_routes.register)}> Create User </b>
-			<br /><br />
+			{
+				gd.auth.isAllowed([0, 1]) &&
+				<>
+					<b id="create" onClick={() => navigate(gd.path_routes.register)}> Create User </b>
+					<br /><br />
+				</>
+			}
 			<b> Users list: </b>
 			<br /><br />
 			{
 				usersList.map((value) => {
 					return (
-						<div className="userCard" key={value.username}>
-							<span className="userName"> - {value.username } </span>
+						<div className="userCard" key={value.email}>
+							<span className="userEmail"> [ role : {value.role} ] - {value.email } </span>
 							<span className="userControls">
-								<span onClick={() => userUpdate(value.username)}>update</span>
-								<span onClick={() => userDelete(value.username)}>delete</span>
+								<span onClick={() => userUpdate(value.email)}>update</span>
+								<span onClick={() => userDelete(value.email)}>delete</span>
 							</span>
 						</div>
 					);

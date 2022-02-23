@@ -13,3 +13,7 @@ html, body {
 	background: var(--blue); color: #fff; font-size: 21px;
 	scroll-behavior: smooth;
 }
+
+input, select, button {
+	outline: unset;
+}
