@@ -1,14 +1,17 @@
-export const	regex_username	= (username) => {
+import * as gd from "./global_data";
+
+
+const	regex_username = (username) => {
 	const	regex	= /^[0-9A-ZÀÁÂÄÇÈÉÊËÌÍÎÏÑÒÓÔÖÙÚÛÜa-zàáâäçèéêëìíîïñòóôöùúûü-]{2,}$/;
 
 	return (regex.test(username));
 }
 
-export const	regex_password	= (password) => {
+const	regex_password = (password) => {
 	return (password.length > 3);
 }
 
-export const	extractParamsUrl = (chaineGET) => {
+const	extractParamsUrl = (chaineGET) => {
 	let	result	= {};
 	
 	chaineGET = chaineGET.split('&');
@@ -21,7 +24,7 @@ export const	extractParamsUrl = (chaineGET) => {
 	return (result);
 }
 
-export const	get_date = (data = {}, separator = '-') => {
+const	get_date = (data = {}, separator = '-') => {
 	let	newDate	= new Date()
 	let	date	= newDate.getDate() + data?.day;
 	let	month	= newDate.getMonth() + data?.month;
@@ -31,3 +34,24 @@ export const	get_date = (data = {}, separator = '-') => {
 	month = month < 0 ? 0 : month;
 	return (`${year}${separator}${month < 10 ? `0${month}` : `${month}`}${separator}${date}`);
 }
+
+const	get_role = (role) => {
+	let	str = "";
+
+	role = parseInt(role, 10);
+	for (const [key, ] of Object.entries(gd.roles)) {
+		if (gd.roles[key] === role) {
+			str = key;
+			break ;
+		}
+	}
+	return (str);
+};
+
+export {
+	regex_username,
+	regex_password,
+	extractParamsUrl,
+	get_date,
+	get_role,
+};

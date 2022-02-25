@@ -1,6 +1,7 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import Axios from "axios";
 
+import { get_role } from "../modules/functions";
 import { auth } from "../modules/global_data";
 
 
@@ -20,17 +21,17 @@ const	auth_init = () => {
 
 export const	AuthProvider = ({ children }) => {
 	auth_init();
-	const	token = auth.get();
+	const	token			= auth.get();
 	const	[user, setUser] = useState(token);
 
 	return (
 		<AuthContext.Provider value={{
-			user, setUser
+			user, setUser,
 		}}>
 			{
 				user?.email && 
 				<p>
-					[[ user logged : {user.email}&nbsp;-&nbsp;role : {user.role} ]]
+					[ {get_role(user.role)} ] - {user.email}
 				</p>
 			}
 			{children}

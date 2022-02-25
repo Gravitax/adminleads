@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Axios from "axios";
 import jwt_decode from "jwt-decode";
 import bcrypt from "bcryptjs";
@@ -16,35 +16,36 @@ import "./Account.css";
 function	Account() {
 	const	token		= gd.auth.get();
 	const	location	= useLocation();
+	// const	navigate	= useNavigate();
 	const	get_params	= extractParamsUrl(location?.search);
-	let		email		= get_params["email"] || token.email;
-
-	console.log(email);
-
+	
+	let		[email, setEmail]	= useState(get_params["email"] || token.email);
 	const	[update, setUpdate] = useState("");
 
 	// si on arrive sur cet page sans être admin
 	// on dit que l'user à modifier est celui qui est connecté
-	if (get_params["email"] !== token.email && !gd.auth.isAllowed([0, 1]))
+	if (!gd.auth.isAllowed([0, 1]) && get_params["email"] !== token.email)
 		email = token.email;
 
 	const	{ register, handleSubmit, setError, control, formState, } = useForm();
 	const	{ isSubmitting, errors, } = formState;
 	const	{ setUser } = useContext(AuthContext);
 
-	const	update_user	= (data, user) => {
+	const	update_user	= (data, user_to_update) => {
 		Axios.put(`/users/update`, { data: { ...data, email, role : token.role, }, })
 			.then((response) => {
 				setUpdate(response.data.message);
 				if (response.data.token) {
 					// si l'user à modifier est celui connecté alors on actualise son token
-					if (user.email === token.email) {
+					if (user_to_update.email === token.email) {
 						gd.auth.set(response.data.token);
 						setUser(jwt_decode(response.data.token));
 					}
 					// si un nouveau email est enregistré on actualise celui reçu de base
-					if (data.new_email)
-						email = data.new_email;
+					if (data.new_email) {
+						// navigate(`${gd.path_routes.account}/?email=${data.new_email}`);
+						setEmail(data.new_email);
+					}
 				}
 			});
 
@@ -57,17 +58,17 @@ function	Account() {
 		if (data.password) {
 			Axios.get(`/users/readOne/${email}`)
 				.then((response) => {
-					let	user = jwt_decode(response.data);
+					let	user_to_update = jwt_decode(response.data);
 
 					// on verifie que l'user qui update rentre le bon mdp
 					bcrypt.compare(data.password, token.password)
 						.then(async (response) => {
-							let	clean_input = await check_input(data, user, setError).then((v) => { return (v); })
+							let	clean_input = await check_input(data, user_to_update, setError).then((v) => { return (v); })
 
 							if (clean_input === true && response === true) {
 								// le pwd est en clair donc on le hash
 								data.password = token.password;
-								update_user(data, user);
+								update_user(data, user_to_update);
 							}
 							else if (response === false) {
 								setError("password", { type	: "manual", message	: "wrong password", });
@@ -85,7 +86,7 @@ function	Account() {
 		Axios.get(`/users/readOne/${email}`)
 			.then((response) => {
 				if (!response.data || response.data.length < 1)
-					email = token.email;
+					setEmail(token.email);
 			});
 	}, [email, token]);
 
@@ -100,7 +101,7 @@ function	Account() {
 				{ gd.auth.isAllowed([0, 1]) &&
 					<div className="my_input">
 						<select {...register("new_role")}>
-							<option value="0"> Role </option>
+							<option value=""> Role </option>
 							{
 								Object.entries(gd.roles).map(([key, value]) => {
 									return (

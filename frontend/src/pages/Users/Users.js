@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Axios from "axios";
 
+import { get_role } from "../../modules/functions";
 import * as gd from "../../modules/global_data";
 
 import "./Users.css";
@@ -42,7 +43,7 @@ function	Users() {
 				usersList.map((value) => {
 					return (
 						<div className="userCard" key={value.email}>
-							<span className="userEmail"> [ role : {value.role} ] - {value.email } </span>
+							<span className="userEmail"> [ {get_role(value.role)} ] - {value.email} </span>
 							<span className="userControls">
 								<span onClick={() => userUpdate(value.email)}>update</span>
 								<span onClick={() => userDelete(value.email)}>delete</span>
