@@ -4,11 +4,11 @@ export function		selectedColumn(column) {
 		|| column === "email" || column === "webtag" || column === "commentaire");
 }
 
-export function		refaktorLabel(column, label, provenances, destinataires) {
-	if (!label || !provenances || !destinataires) return ;
+export function		refaktorLabel(column, label, flux, dispositifs) {
+	if (!label || !flux || !dispositifs) return ;
 	if (column === "timestamp")		return (label.split('T')[0]);
-	if (column === "flux")			label = `${destinataires[label - 1]?.nom} (${label})`;
-	if (column === "dispositif")	label = `${provenances[label - 1]?.nom} (${label})`;
+	if (column === "flux")			label = `${flux[label - 1]?.nom} (${label})`;
+	if (column === "dispositif")	label = `${dispositifs[label - 1]?.nom} (${label})`;
 	return (label);
 }
 

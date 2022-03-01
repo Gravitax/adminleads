@@ -8,8 +8,8 @@ const	mdlw_auth	= require("../middlewares/auth");
 
 router.get("/readAll", mdlw_auth, ctrl_leads.readAll);
 router.get("/readQuery", mdlw_auth, ctrl_leads.readQuery);
-router.get("/readDestinataires", mdlw_auth, ctrl_leads.readDestinataires);
-router.get("/readProvenances", mdlw_auth, ctrl_leads.readProvenances);
+router.get("/readDispositifs", mdlw_auth, ctrl_leads.readDispositifs);
+router.get("/readFlux", mdlw_auth, ctrl_leads.readFlux);
 
 router.post("/update", mdlw_auth, ctrl_leads.update);
 

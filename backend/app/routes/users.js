@@ -1,3 +1,4 @@
+
 const	express		= require ("express");
 const	router		= express.Router();
 
@@ -8,8 +9,8 @@ const	mdlw_auth	= require("../middlewares/auth");
 
 router.delete("/delete/:email", mdlw_auth, ctrl_users.delete);
 
-router.get("/read", mdlw_auth, ctrl_users.read);
-router.get("/readOne/:email", mdlw_auth, ctrl_users.readOne);
+router.get("/readAll", mdlw_auth, ctrl_users.readAll);
+router.get("/read/:email", mdlw_auth, ctrl_users.read);
 
 router.put("/update", mdlw_auth, ctrl_users.update);
 

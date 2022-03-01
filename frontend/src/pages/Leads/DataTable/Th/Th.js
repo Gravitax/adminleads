@@ -1,7 +1,7 @@
 function	renameColumn(column) {
 	if (column === "timestamp")		return ("Date");
-	if (column === "flux")			return ("Destinataires");
-	if (column === "dispositif")	return ("Provenances");
+	if (column === "flux")			return ("Flux");
+	if (column === "dispositif")	return ("Dispositif");
 	return (column.charAt(0).toUpperCase() + column.slice(1));
 }
 

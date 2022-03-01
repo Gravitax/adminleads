@@ -11,12 +11,14 @@ const	Selected = ({ ...data }) => {
 	const	[status, setStatus]	= useState(null);
 
 	function	handleAction() {
-		if (status?.action === "Exporter") {
+		if (status?.action === "Exporter" && data?.selected.length > 0) {
 			export_csv(data?.selected, "leads_list");
 		}
 		else {
-			Axios.post("/api/leads/update", { data, status })
-				.then(() => { data?.onClick(); });
+			Axios.post("/leads/update", { data, status })
+				.then(() => {
+					data?.onClick();
+				});
 		}
 	}
 

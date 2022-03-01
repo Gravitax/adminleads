@@ -9,19 +9,20 @@ import "./LeadsForm.css";
 
 
 const	LeadsForm = ({ ...data }) => {
-	const	[dateStart, setDateStart]			= useState(null);
-	const	[dateEnd, setDateEnd]				= useState(null);
-	const	[destinataires, setDestinataires]	= useState(null);
-	const	[provenances, setProvenances]		= useState(null);
-	const	[status, setStatus]					= useState(null);
+	const	[dateStart, setDateStart]	= useState(null);
+	const	[dateEnd, setDateEnd]		= useState(null);
+	const	[dispositif, setDispositif]	= useState(null);
+	const	[flux, setFlux]				= useState(null);
+	const	[status, setStatus]			= useState(null);
 
-	const	handleSubmit = () => {
+	const	handleSubmit = (e) => {
+		e.preventDefault();
 		data?.onClick({
 			dateStart		: dateStart,
 			dateEnd			: dateEnd,
-			destinataires	: destinataires,
-			provenances		: provenances,
-			status			: status,
+			dispositif		: dispositif?.id,
+			flux			: flux?.id,
+			status			: status?.status,
 		});
 	};
 
@@ -43,13 +44,13 @@ const	LeadsForm = ({ ...data }) => {
 					isClearable placeholderText="date end"
 				/>
 
-				<Dropdown prompt="destinataires" label="nom" value={destinataires}
-					options={data?.destinataires}
-					onChange={(value) => { setDestinataires(value); }}
+				<Dropdown prompt="flux" label="nom" value={flux}
+					options={data?.flux}
+					onChange={(value) => { setFlux(value) }}
 				/>
-				<Dropdown prompt="provenances" label="nom" value={provenances}
-					options={data?.provenances}
-					onChange={(value) => { setProvenances(value) }}
+				<Dropdown prompt="dispositifs" label="nom" value={dispositif}
+					options={data?.dispositifs}
+					onChange={(value) => { setDispositif(value); }}
 				/>
 				<Dropdown prompt="status" label="status" value={status}
 					options={[{ status: "All" }, { status: "Valid" }, { status: "Invalid" }]}

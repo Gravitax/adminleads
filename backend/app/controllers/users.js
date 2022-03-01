@@ -13,7 +13,7 @@ exports.delete = (req, res, next) => {
 		.catch(() => res.status(500));
 };
 
-exports.read = (req, res, next) => {
+exports.readAll = (req, res, next) => {
 	db.User.findAll()
 		.then((response) => {
 			res.send(response);
@@ -21,8 +21,8 @@ exports.read = (req, res, next) => {
 		.catch(() => res.status(500));
 };
 
-exports.readOne = (req, res, next) => {
-	const	email	= req.params.email;
+exports.read = (req, res, next) => {
+	const	email = req.params.email;
 
 	if (!email) return ;
 	db.User.findOne({ where : { email : email } })

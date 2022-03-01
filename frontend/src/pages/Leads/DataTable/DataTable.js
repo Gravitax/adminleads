@@ -18,7 +18,7 @@ const	pageData = (data, page = 1, per = 50) => {
 	return (data?.slice(per * (page - 1), per * page));
 };
 
-const	DataTable = ({ data, provenances, destinataires, onClick }) => {
+const	DataTable = ({ data, flux, dispositifs, onClick }) => {
 
 	const	token	= localStorage.getItem("auth_token");
 	const	dToken	= token && jwt_decode(token);
@@ -172,7 +172,7 @@ const	DataTable = ({ data, provenances, destinataires, onClick }) => {
 								{
 									columns.map((column) => {
 										if (selectedColumn(column)) {
-											let	label = refaktorLabel(column, row[column], provenances, destinataires);
+											let	label = refaktorLabel(column, row[column], flux, dispositifs);
 
 											return (<td key={uuidv4()}>{label}</td>);
 										}

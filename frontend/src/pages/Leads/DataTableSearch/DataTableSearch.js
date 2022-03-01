@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import DataTable from "../DataTable/DataTable";
 
 
-const	DataTableSearch = ({ data, provenances, destinataires, onClick }) => {
+const	DataTableSearch = ({ data, flux, dispositifs, onClick }) => {
 	const	[query, setQuery]					= useState("");
 	const	[searchColumns, setSearchColumns]	= useState([
 		"timestamp", "flux", "programme", "dispositif", "email", "webtag", "projet", "commentaire",
@@ -49,8 +49,8 @@ const	DataTableSearch = ({ data, provenances, destinataires, onClick }) => {
 			} */}
 			<DataTable
 				data={search(data)}
-				destinataires={destinataires}
-				provenances={provenances}
+				dispositifs={dispositifs}
+				flux={flux}
 				onClick={onClick}
 			/>
 		</div>

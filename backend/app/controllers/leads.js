@@ -1,26 +1,14 @@
-const	db		= require("../modules/db");
+const	db	= require("../models/init");
+const	Op	= db.Sequelize.Op;
 
 
-function	getID(selected) {
-	let	arr = [];
+function	get_id_list(list) {
+	let	id_list = [];
 
-	selected.forEach((tmp) => {
-		arr.push(tmp?.id);
+	list.forEach((elt) => {
+		id_list.push(elt?.id);
 	});
-	return (arr.join(","));
-}
-
-function	leads_anonymisation(id_list) {
-	return (`UPDATE lead SET telephone = 'TELEPHONE', email = 'EMAIL' WHERE id IN ( ${id_list} )`);
-}
-function	leads_accept(id_list) {
-	return (`UPDATE lead SET accepte = '1' WHERE id IN ( ${id_list} )`);
-}
-function	leads_reject(id_list) {
-	return (`UPDATE lead SET accepte = '0' WHERE id IN ( ${id_list} )`);
-}
-function	leads_delete(id_list) {
-	return (`DELETE FROM lead WHERE id IN ( ${id_list} )`);
+	return (id_list);
 }
 
 exports.update = (req, res, next) => {
@@ -30,30 +18,31 @@ exports.update = (req, res, next) => {
 	if (!data || !status) return ;
 
 	let	action	= status.action;
-	let	id_list	= getID(data.selected);
+	let	id_list	= get_id_list(data.selected);
 	let	query	= null;
 	
-	if (action ===  "Anonymiser")		query = leads_anonymisation(id_list);
-	else if (action ===  "Accepter")	query = leads_accept(id_list);
-	else if (action ===  "Rejeter")		query = leads_reject(id_list);
-	else if (action ===  "Supprimer")	query = leads_delete(id_list);
+	if (action ===  "Anonymiser")		query = { telephone : "PHONE", email : "EMAIL" };
+	else if (action ===  "Accepter")	query = { accepte : 1 };
+	else if (action ===  "Rejeter")		query = { accepte : 0 };
+	else if (action ===  "Supprimer") {
+		db.Lead.destroy({ where : { id : id_list } });
+		return ;
+	}
 
 	if (!query) return ;
-	db.query(query,
-		(error, results) => {
-			if (error) res.status(500);
-			res.send(results);
-		}
-	);
+	db.Lead.update(query, { where : { id : id_list } })
+		.then((response) => {
+			res.send(response);
+		})
+		.catch(() => res.status(500));
 }
 
 exports.readAll = (req, res, next) => {
-	db.query("SELECT * FROM lead",
-		(error, results) => {
-			if (error) res.status(500);
-			res.send(results);
-		}
-	);
+	db.Lead.findAll()
+		.then((response) => {
+			res.send(response);
+		})
+		.catch(() => res.status(500));
 };
 
 exports.readQuery = (req, res, next) => {
@@ -62,57 +51,44 @@ exports.readQuery = (req, res, next) => {
 	data = JSON.parse(data);
 	if (!data) return ;
 
-	let	dateStart	= data.dateStart?.split("T")[0];
-	let	dateEnd		= data.dateEnd?.split("T")[0];
-	let	flux		= data.destinataires;
-	let	dispositif	= data.provenances;
-	let	status		= data.status?.status || data.status;
-	let query 		= "SELECT * FROM lead";
+	let	dateStart, dateEnd, query = {};
 
-	if (status === "All") status = null;
-	if (status)
-		status = status === "Valid" ? 1 : -1;
+	if (data.dateStart)
+		dateStart = `${data.dateStart}`.split('T')[0];
+	if (data.dateEnd)
+		dateEnd = `${data.dateEnd}`.split('T')[0];
 
-	if (dateStart || dateEnd || flux || dispositif || status) {
-		query += " WHERE";
+	if (data.flux)
+		query.flux = parseInt(data.flux, 10);
+	if (data.dispositif)
+		query.dispositif = parseInt(data.dispositif, 10);
+	if (data.status && data.status !== "All")
+		query.accepte = data.status === "Valid" ? 1 : 0;
+	
+	if (dateStart)	query.timestamp = { [Op.gt] : dateStart }
+	if (dateEnd)	query.timestamp = { [Op.lt] : dateEnd }
+	if (dateStart && dateEnd)
+		query.timestamp = { [Op.between] : [dateStart, dateEnd] }
 
-		if (dateStart)				query += ` timestamp > '${dateStart}'`;
-		if (dateStart && dateEnd)	query += " AND";
-		if (dateEnd)				query += ` timestamp <= '${dateEnd}'`;
+	db.Lead.findAll({ where : query })
+		.then((response) => {
+			res.send(response);
+		})
+		.catch(() => res.status(500));
+}
 
-		if ((flux || dispositif) && (dateStart || dateEnd))
-			query += " AND";
-		if (flux)					query += ` flux = '${flux.id}'`;
-		if (flux && dispositif)		query += " AND";
-		if (dispositif)				query += ` dispositif = '${dispositif.id}'`;
-
-		if (status && (dateStart || dateEnd || flux || dispositif))
-			query += " AND";
-		if (status)					query += ` accepte = '${status === 1 ? 1 : 0}'`;
-	}
-
-	db.query(query,
-		(error, results) => {
-			if (error) res.status(500);
-			res.send(results);
-		}
-	);
+exports.readDispositifs = (req, res, next) => {
+	db.Dispositif.findAll()
+		.then((response) => {
+			res.send(response);
+		})
+		.catch(() => res.status(500));
 };
 
-exports.readDestinataires = (req, res, next) => {
-	db.query("SELECT * FROM flux WHERE 1",
-		(error, results) => {
-			if (error) res.status(500);
-			res.send(results);
-		}
-	);
-};
-
-exports.readProvenances = (req, res, next) => {
-	db.query("SELECT * FROM dispositif WHERE 1",
-		(error, results) => {
-			if (error) res.status(500);
-			res.send(results);
-		}
-	);
+exports.readFlux = (req, res, next) => {
+	db.Flux.findAll()
+		.then((response) => {
+			res.send(response);
+		})
+		.catch(() => res.status(500));
 };

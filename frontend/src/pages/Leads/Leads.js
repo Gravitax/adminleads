@@ -9,9 +9,9 @@ import "./Leads.css";
 
 
 function	Leads() {
-	const	[leadsList, setLeadsList]			= useState([]);	
-	const	[destinataires, setDestinataires]	= useState([]);
-	const	[provenances, setProvenances]		= useState([]);
+	const	[leadsList, setLeadsList]		= useState([]);	
+	const	[dispositifs, setDispositifs]	= useState([]);
+	const	[flux, setFlux]					= useState([]);
 
 	const	[submit, setSubmit]		= useState(false);
 	const	[subData, setSubData]	= useState([]);
@@ -20,18 +20,18 @@ function	Leads() {
 	const	override				= `display: flex; justify-content: center; align-items: center;`;
 
 	useEffect(() => {
-		Axios.get("/leads/readDestinataires")
-			.then((response) => { setDestinataires(response.data); });
-		Axios.get("/leads/readProvenances")
-			.then((response) => { setProvenances(response.data); });
+		Axios.get("/leads/readDispositifs")
+			.then((response) => { setDispositifs(response.data); });
+		Axios.get("/leads/readFlux")
+			.then((response) => { setFlux(response.data); });
 		if (submit) {
 			setLeadsList([]);
-			Axios.get("/leads/readQuery", { params : { subData }, })
+			Axios.get("/leads/readQuery", { params : { subData } })
 				.then((response) => {
-					setLeadsList(response.data);
+					setSubmit(false);
 					setLoading(false);
+					setLeadsList(response.data);
 				});
-			setSubmit(false);
 		}
 	}, [submit, subData]);
 
@@ -45,7 +45,7 @@ function	Leads() {
 					setSubmit(true);
 					setLoading(true);
 				}}
-				destinataires={destinataires} provenances={provenances}
+				dispositifs={dispositifs} flux={flux}
 			/>
 
 			<br />
@@ -57,7 +57,7 @@ function	Leads() {
 			{ leadsList.length > 0 &&
 				<DataTableSearch
 					data={leadsList}
-					destinataires={destinataires} provenances={provenances}
+					dispositifs={dispositifs} flux={flux}
 					onClick={() => {
 						setSubmit(true);
 						setLoading(true);

@@ -1,4 +1,5 @@
 const	db = {};
+
 db.Sequelize = require("sequelize");
 db.sequelize = new db.Sequelize(
 	"adminleads",
@@ -11,6 +12,10 @@ db.sequelize = new db.Sequelize(
 );
 
 db.User = require("./User")(db.Sequelize, db.sequelize);
+
+db.Lead			= require("./Lead")(db.Sequelize, db.sequelize);
+db.Dispositif	= require("./Dispositif")(db.Sequelize, db.sequelize);
+db.Flux			= require("./Flux")(db.Sequelize, db.sequelize);
 
 
 module.exports = db;

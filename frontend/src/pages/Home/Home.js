@@ -15,8 +15,8 @@ function	Home() {
 
 	const	[leadsAccept, setLeadsAccept]		= useState([]);
 	const	[leadsReject, setLeadsReject]		= useState([]);
-	const	[destinataires, setDestinataires]	= useState([]);
-	const	[provenances, setProvenances]		= useState([]);
+	const	[dispositifs, setDispositifs]	= useState([]);
+	const	[flux, setflux]		= useState([]);
 
 	useEffect(() => {
 		let		subData, date;
@@ -32,10 +32,10 @@ function	Home() {
 			setSubmit(false);
 		}
 
-		Axios.get("/leads/readDestinataires")
-			.then((response) => { setDestinataires(response.data); });
-		Axios.get("/leads/readProvenances")
-			.then((response) => { setProvenances(response.data); });
+		Axios.get("/leads/readdispositifs")
+			.then((response) => { setDispositifs(response.data); });
+		Axios.get("/leads/readFlux")
+			.then((response) => { setflux(response.data); });
 	}, [submit]);
 
 	function	toggleModule(moduleName) {
@@ -62,14 +62,14 @@ function	Home() {
 				{ module === "accept" &&
 					<DataTableSearch
 						data={leadsAccept}
-						destinataires={destinataires} provenances={provenances}
+						dispositifs={dispositifs} flux={flux}
 						onClick={() => { setSubmit(true); }}
 					/>
 				}
 				{ module === "reject" &&
 					<DataTableSearch
 						data={leadsReject}
-						destinataires={destinataires} provenances={provenances}
+						dispositifs={dispositifs} flux={flux}
 						onClick={() => { setSubmit(true); }}
 					/>
 				}
