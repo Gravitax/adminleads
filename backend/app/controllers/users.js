@@ -4,16 +4,7 @@ const	db		= require("../models/init");
 const	token	= require("../modules/token");
 
 
-exports.delete = (req, res, next) => {
-	const	email = req.params.email;
-
-	if (!email) return ;
-	db.User.destroy({ where : { email : email } })
-		.then((response) => res.send(response))
-		.catch(() => res.status(500));
-};
-
-exports.readAll = (req, res, next) => {
+exports.findAll = (req, res, next) => {
 	db.User.findAll()
 		.then((response) => {
 			res.send(response);
@@ -21,7 +12,7 @@ exports.readAll = (req, res, next) => {
 		.catch(() => res.status(500));
 };
 
-exports.read = (req, res, next) => {
+exports.findOne = (req, res, next) => {
 	const	email = req.params.email;
 
 	if (!email) return ;
@@ -32,8 +23,19 @@ exports.read = (req, res, next) => {
 		.catch(() => res.status(500));
 };
 
+exports.delete = (req, res, next) => {
+	const	email = req.params.email;
+
+	if (!email) return ;
+	db.User.destroy({ where : { email : email } })
+		.then((response) => {
+			res.send(response);
+		})
+		.catch(() => res.status(500));
+};
+
 exports.update = (req, res, next) => {
-	const	data		= req.body.data;
+	const	data = req.body.data;
 
 	if (!data) return ;
 	if (data.new_password)

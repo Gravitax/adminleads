@@ -1,14 +1,15 @@
 export function		selectedColumn(column) {
-	return (column === "timestamp" || column === "flux" || column === "dispositif"
+	return (column === "timestamp" || column === "clients" || column === "media"
 		|| column === "programme" || column === "projet"
 		|| column === "email" || column === "webtag" || column === "commentaire");
 }
 
-export function		refaktorLabel(column, label, flux, dispositifs) {
-	if (!label || !flux || !dispositifs) return ;
-	if (column === "timestamp")		return (label.split('T')[0]);
-	if (column === "flux")			label = `${flux[label - 1]?.nom} (${label})`;
-	if (column === "dispositif")	label = `${dispositifs[label - 1]?.nom} (${label})`;
+export function		refaktorLabel(column, label, clients, medias) {
+	if (!label || !clients || !medias) return ;
+	if (column === "timestamp")
+		return (label.split('T')[0]);
+	if (column === "clients")	label = `${clients[label - 1]?.name} (${label})`;
+	if (column === "media")		label = `${medias[label - 1]?.name} (${label})`;
 	return (label);
 }
 

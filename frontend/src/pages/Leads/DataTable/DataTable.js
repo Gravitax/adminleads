@@ -8,6 +8,7 @@ import Th from "./Th/Th";
 import { getRowType, refaktorLabel, selectedColumn } from "./tools.js";
 
 import { export_csv } from "../../../modules/export_csv";
+import * as gd from "../../../modules/global_data";
 
 import "./DataTable.css";
 
@@ -18,19 +19,12 @@ const	pageData = (data, page = 1, per = 50) => {
 	return (data?.slice(per * (page - 1), per * page));
 };
 
-const	DataTable = ({ data, flux, dispositifs, onClick }) => {
-
-	const	token	= localStorage.getItem("auth_token");
-	const	dToken	= token && jwt_decode(token);
-
+const	DataTable = ({ data, clients, medias, onClick }) => {
 	const	[sortColumn, setSortColumn]	= useState("");
 	const	[sortDir, setSortDir]		= useState("");
-
 	const	[selected, setSelected]		= useState([]);
 	const	[checked, setChecked]		= useState(false);
-
 	const	[show, setShow] 			= useState(50);
-
 	const	[state, setState]			= useState({
 		data	: pageData(data),
 		page	: 1,
@@ -144,7 +138,7 @@ const	DataTable = ({ data, flux, dispositifs, onClick }) => {
 							})
 						}
 						<Th key={uuidv4()} label={"Type"} className="type" />
-						{ dToken?.role === 0 &&
+						{ gd.auth.isAllowed([0, 1]) &&
 							<th key={uuidv4()} className="select">
 								<Checkbox selected={selected} checked={checked}
 									onClick={() => {
@@ -172,7 +166,7 @@ const	DataTable = ({ data, flux, dispositifs, onClick }) => {
 								{
 									columns.map((column) => {
 										if (selectedColumn(column)) {
-											let	label = refaktorLabel(column, row[column], flux, dispositifs);
+											let	label = refaktorLabel(column, row[column], clients, medias);
 
 											return (<td key={uuidv4()}>{label}</td>);
 										}
@@ -180,7 +174,7 @@ const	DataTable = ({ data, flux, dispositifs, onClick }) => {
 									})
 								}
 									<td key={uuidv4()}>{getRowType(row["webtag"], accept)}</td>
-									{ dToken?.role === 0 &&
+									{ gd.auth.isAllowed([0, 1]) &&
 										<td>
 											<Checkbox row={row} selected={selected}
 												onClick={() => handleCheckboxChange(row)}

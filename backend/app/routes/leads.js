@@ -6,12 +6,12 @@ const	ctrl_leads	= require("../controllers/leads");
 const	mdlw_auth	= require("../middlewares/auth");
 
 
-router.get("/readAll", mdlw_auth, ctrl_leads.readAll);
-router.get("/readQuery", mdlw_auth, ctrl_leads.readQuery);
-router.get("/readDispositifs", mdlw_auth, ctrl_leads.readDispositifs);
-router.get("/readFlux", mdlw_auth, ctrl_leads.readFlux);
+router.get("/findAll", mdlw_auth, ctrl_leads.findAll);
+router.get("/findQuery", mdlw_auth, ctrl_leads.findQuery);
 
 router.post("/update", mdlw_auth, ctrl_leads.update);
+
+router.get("/findAll", mdlw_auth, ctrl_leads.findAll);
 
 
 module.exports = router;

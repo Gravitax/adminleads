@@ -18,7 +18,7 @@
 	color: var(--blue);
 }
 
-#users #create {
+#users .create {
 	width: 200px; height: 60px;
 	background-color: black; color: white;
 	font-size: 18px; font-weight: bold;

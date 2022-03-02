@@ -56,7 +56,7 @@ function	Account() {
 		if (!data.new_email && !data.new_role && !data.new_password)
 			return ;
 		if (data.password) {
-			Axios.get(`/users/read/${email}`)
+			Axios.get(`/users/findOne/${email}`)
 				.then((response) => {
 					let	user_to_update = jwt_decode(response.data);
 
@@ -83,7 +83,7 @@ function	Account() {
 	useEffect(() => {
 		// au chargement on vérifie que l'email existe
 		// sinon on dit que l'user à modifier est celui qui est connecté
-		Axios.get(`/users/read/${email}`)
+		Axios.get(`/users/findOne/${email}`)
 			.then((response) => {
 				if (!response.data || response.data.length < 1)
 					setEmail(token.email);

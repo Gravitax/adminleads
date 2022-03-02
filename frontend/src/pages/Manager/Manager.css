@@ -1,0 +1,15 @@
+#container_manager {
+	display: flex; justify-content: center; align-items: center;
+	gap: 15px;
+	width: 100%;
+	margin: 30px;
+}
+
+#container_manager .link {
+	text-decoration: none;
+	color: white;
+	padding: 10px 20px;
+	background-color: black;
+	cursor: pointer;
+}
+

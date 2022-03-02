@@ -4,7 +4,7 @@ import XLSX from "xlsx";
 
 export const	export_csv = (csv_data, file_name) => {
 
-	if (!csv_data || !file_name) return ;
+	if (!csv_data || csv_data.length < 1 || !file_name) return ;
 
 	const	file_type		= "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";	
 	const	file_extension	= ".xlsx";

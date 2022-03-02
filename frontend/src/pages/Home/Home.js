@@ -15,8 +15,8 @@ function	Home() {
 
 	const	[leadsAccept, setLeadsAccept]		= useState([]);
 	const	[leadsReject, setLeadsReject]		= useState([]);
-	const	[dispositifs, setDispositifs]	= useState([]);
-	const	[flux, setflux]		= useState([]);
+	const	[medias, setMedias]	= useState([]);
+	const	[clients, setClients]		= useState([]);
 
 	useEffect(() => {
 		let		subData, date;
@@ -24,18 +24,18 @@ function	Home() {
 		if (submit) {
 			date	= get_date({ day: -1, month: -1, year: 0 });
 			subData	= { dateStart: date, status: "Valid", };
-			Axios.get("/leads/readQuery", { params : { subData }, })
+			Axios.get("/leads/findQuery", { params : { subData }, })
 				.then((response) => { setLeadsAccept(response.data); });
 			subData	= { dateStart: date, status: "Invalid", };
-			Axios.get("/leads/readQuery", { params : { subData }, })
+			Axios.get("/leads/findQuery", { params : { subData }, })
 				.then((response) => { setLeadsReject(response.data); });
 			setSubmit(false);
 		}
 
-		Axios.get("/leads/readdispositifs")
-			.then((response) => { setDispositifs(response.data); });
-		Axios.get("/leads/readFlux")
-			.then((response) => { setflux(response.data); });
+		Axios.get("/medias/findAll")
+			.then((response) => { setMedias(response.data); });
+		Axios.get("/clients/findAll")
+			.then((response) => { setClients(response.data); });
 	}, [submit]);
 
 	function	toggleModule(moduleName) {
@@ -62,14 +62,14 @@ function	Home() {
 				{ module === "accept" &&
 					<DataTableSearch
 						data={leadsAccept}
-						dispositifs={dispositifs} flux={flux}
+						medias={medias} clients={clients}
 						onClick={() => { setSubmit(true); }}
 					/>
 				}
 				{ module === "reject" &&
 					<DataTableSearch
 						data={leadsReject}
-						dispositifs={dispositifs} flux={flux}
+						medias={medias} clients={clients}
 						onClick={() => { setSubmit(true); }}
 					/>
 				}

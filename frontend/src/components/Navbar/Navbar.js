@@ -28,8 +28,8 @@ function	Navbar() {
 				Leads
 			</Link>
 			{ gd.auth.isAllowed([0, 1]) &&
-				<Link to={gd.path_routes.users}>
-					Users
+				<Link to={gd.path_routes.manager}>
+					Manager
 				</Link>
 			}
 			<div className={"navbar_picto" + (classActive ? " active" : "")}

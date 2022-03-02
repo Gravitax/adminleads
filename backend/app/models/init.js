@@ -11,11 +11,12 @@ db.sequelize = new db.Sequelize(
 	}
 );
 
-db.User = require("./User")(db.Sequelize, db.sequelize);
+db.User		= require("./User")(db.Sequelize, db.sequelize);
 
-db.Lead			= require("./Lead")(db.Sequelize, db.sequelize);
-db.Dispositif	= require("./Dispositif")(db.Sequelize, db.sequelize);
-db.Flux			= require("./Flux")(db.Sequelize, db.sequelize);
+db.Lead		= require("./Lead")(db.Sequelize, db.sequelize);
+db.Media	= require("./Media")(db.Sequelize, db.sequelize);
+db.Client	= require("./Client")(db.Sequelize, db.sequelize);
+db.Service	= require("./Service")(db.Sequelize, db.sequelize);
 
 
 module.exports = db;

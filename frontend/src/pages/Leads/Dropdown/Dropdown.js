@@ -63,7 +63,7 @@ const	Dropdown = ({ options, prompt, label, value, onChange }) => {
 			</div>
 			<div className={`options ${open ? "open" : ""}`}>
 				{
-					search(options).map((option) => {
+					options && search(options).map((option) => {
 						return (
 							<div key={uuidv4()} className={`option ${value === option ? "selected" : ""}`}
 								onClick={() => selectOption(option)} onTouchEnd={() => selectOption(option)}

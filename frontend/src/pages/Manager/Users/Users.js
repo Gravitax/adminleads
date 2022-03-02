@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Axios from "axios";
 
-import { get_role } from "../../modules/functions";
-import * as gd from "../../modules/global_data";
+import { get_role } from "../../../modules/functions";
+import * as gd from "../../../modules/global_data";
 
 import "./Users.css";
 
@@ -13,7 +13,7 @@ function	Users() {
 	const	navigate = useNavigate();
 
 	useEffect(() => {
-		Axios.get("/users/readAll")
+		Axios.get("/users/findAll")
 			.then((response) => {
 				setUsersList(response.data);
 			});
@@ -44,7 +44,7 @@ function	Users() {
 			{
 				gd.auth.isAllowed([0, 1]) &&
 				<>
-					<b id="create" onClick={() => navigate(gd.path_routes.register)}> Create User </b>
+					<b className="create" onClick={() => navigate(gd.path_routes.register)}> Create User </b>
 					<br /><br />
 				</>
 			}

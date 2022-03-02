@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import Axios from "axios";
 
-import { roles } from "../../../modules/global_data";
-import { regex_username, regex_password } from "../../../modules/functions";
+import { roles } from "../../../../modules/global_data";
+import { regex_username, regex_password } from "../../../../modules/functions";
 
 import "./Register.css";
 

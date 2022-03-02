@@ -9,9 +9,9 @@ import "./Leads.css";
 
 
 function	Leads() {
-	const	[leadsList, setLeadsList]		= useState([]);	
-	const	[dispositifs, setDispositifs]	= useState([]);
-	const	[flux, setFlux]					= useState([]);
+	const	[leadsList, setLeadsList]	= useState([]);	
+	const	[medias, setMedias]			= useState([]);
+	const	[clients, setClients]		= useState([]);
 
 	const	[submit, setSubmit]		= useState(false);
 	const	[subData, setSubData]	= useState([]);
@@ -20,13 +20,17 @@ function	Leads() {
 	const	override				= `display: flex; justify-content: center; align-items: center;`;
 
 	useEffect(() => {
-		Axios.get("/leads/readDispositifs")
-			.then((response) => { setDispositifs(response.data); });
-		Axios.get("/leads/readFlux")
-			.then((response) => { setFlux(response.data); });
+		Axios.get("/medias/findAll")
+			.then((response) => {
+				setMedias(response.data);
+			});
+		Axios.get("/clients/findAll")
+			.then((response) => {
+				setClients(response.data);
+			});
 		if (submit) {
 			setLeadsList([]);
-			Axios.get("/leads/readQuery", { params : { subData } })
+			Axios.get("/leads/findQuery", { params : { subData } })
 				.then((response) => {
 					setSubmit(false);
 					setLoading(false);
@@ -45,7 +49,7 @@ function	Leads() {
 					setSubmit(true);
 					setLoading(true);
 				}}
-				dispositifs={dispositifs} flux={flux}
+				medias={medias} clients={clients}
 			/>
 
 			<br />
@@ -57,7 +61,7 @@ function	Leads() {
 			{ leadsList.length > 0 &&
 				<DataTableSearch
 					data={leadsList}
-					dispositifs={dispositifs} flux={flux}
+					medias={medias} clients={clients}
 					onClick={() => {
 						setSubmit(true);
 						setLoading(true);

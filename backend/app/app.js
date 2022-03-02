@@ -17,13 +17,19 @@ app.use(cors(cors_options));
 const	db = require("./models/init");
 db.sequelize.sync();
 
-const	route_auth	= require("./routes/auth");
-const	route_leads	= require("./routes/leads");
-const	route_users	= require("./routes/users");
+const	route_auth		= require("./routes/auth");
+const	route_leads		= require("./routes/leads");
+const	route_users		= require("./routes/users");
+const	route_medias	= require("./routes/medias");
+const	route_clients	= require("./routes/clients");
+const	route_services	= require("./routes/services");
 
 app.use("/auth", route_auth);
 app.use("/leads", route_leads);
 app.use("/users", route_users);
+app.use("/medias", route_medias);
+app.use("/clients", route_clients);
+app.use("/services", route_services);
 
 
 module.exports = app;

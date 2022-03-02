@@ -11,6 +11,14 @@ function	get_id_list(list) {
 	return (id_list);
 }
 
+function	delete_leads(req, res, next, id_list) {
+	db.Lead.destroy({ where : { id : id_list } })
+		.then(() => {
+			res.status(204).end();
+		})
+		.catch(() => res.status(500));
+}
+
 exports.update = (req, res, next) => {
 	let	data	= req.query.data || req.body.data;
 	let	status	= req.query.status || req.body.status;
@@ -24,10 +32,7 @@ exports.update = (req, res, next) => {
 	if (action ===  "Anonymiser")		query = { telephone : "PHONE", email : "EMAIL" };
 	else if (action ===  "Accepter")	query = { accepte : 1 };
 	else if (action ===  "Rejeter")		query = { accepte : 0 };
-	else if (action ===  "Supprimer") {
-		db.Lead.destroy({ where : { id : id_list } });
-		return ;
-	}
+	else if (action ===  "Supprimer")	delete_leads(req, res, next, id_list);
 
 	if (!query) return ;
 	db.Lead.update(query, { where : { id : id_list } })
@@ -37,7 +42,7 @@ exports.update = (req, res, next) => {
 		.catch(() => res.status(500));
 }
 
-exports.readAll = (req, res, next) => {
+exports.findAll = (req, res, next) => {
 	db.Lead.findAll()
 		.then((response) => {
 			res.send(response);
@@ -45,7 +50,7 @@ exports.readAll = (req, res, next) => {
 		.catch(() => res.status(500));
 };
 
-exports.readQuery = (req, res, next) => {
+exports.findQuery = (req, res, next) => {
 	let	data = req.query.subData || req.body.subData;
 	
 	data = JSON.parse(data);
@@ -58,10 +63,10 @@ exports.readQuery = (req, res, next) => {
 	if (data.dateEnd)
 		dateEnd = `${data.dateEnd}`.split('T')[0];
 
-	if (data.flux)
-		query.flux = parseInt(data.flux, 10);
-	if (data.dispositif)
-		query.dispositif = parseInt(data.dispositif, 10);
+	if (data.client)
+		query.client = parseInt(data.client, 10);
+	if (data.media)
+		query.media = parseInt(data.media, 10);
 	if (data.status && data.status !== "All")
 		query.accepte = data.status === "Valid" ? 1 : 0;
 	
@@ -76,19 +81,3 @@ exports.readQuery = (req, res, next) => {
 		})
 		.catch(() => res.status(500));
 }
-
-exports.readDispositifs = (req, res, next) => {
-	db.Dispositif.findAll()
-		.then((response) => {
-			res.send(response);
-		})
-		.catch(() => res.status(500));
-};
-
-exports.readFlux = (req, res, next) => {
-	db.Flux.findAll()
-		.then((response) => {
-			res.send(response);
-		})
-		.catch(() => res.status(500));
-};

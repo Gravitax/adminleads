@@ -10,7 +10,7 @@ module.exports = (Sequelize, sequelize) => {
 			timestamp : {
 				type			: Sequelize.DATE,
 			},
-			flux : {
+			clients : {
 				type			: Sequelize.INTEGER,
 			},
 			ucci : {
@@ -19,8 +19,8 @@ module.exports = (Sequelize, sequelize) => {
 			programme : {
 				type			: Sequelize.STRING,
 			},
-			dispositif : {
-				type			: Sequelize.STRING,
+			media : {
+				type			: Sequelize.INTEGER,
 			},
 			civilite : {
 				type			: Sequelize.STRING,

@@ -6,8 +6,12 @@ const	path_routes = {
 	"home"		: "/private",
 	"leads"		: "/private/leads",
 	"account"	: "/private/account",
-	"users"		: "/private/users",
-	"register"	: "/private/users/register"
+	"manager"	: "/private/manager",
+	"medias"	: "/private/manager/medias",
+	"clients"	: "/private/manager/clients",
+	"services"	: "/private/manager/services",
+	"users"		: "/private/manager/users",
+	"register"	: "/private/manager/users/register",
 };
 
 const	roles = {

@@ -1,22 +1,18 @@
 module.exports = (Sequelize, sequelize) => {
 	return (
-		sequelize.define("Flux", {
-			id			: {
+		sequelize.define("Media", {
+			id		: {
 				type			: Sequelize.INTEGER,
 				autoIncrement	: true,
 				allowNull		: false,
 				primaryKey		: true
 			},
-			nom			: {
+			name	: {
 				type			: Sequelize.STRING,
-				allowNull		: false
-			},
-			editLead	: {
-				type			: Sequelize.INTEGER,
 				allowNull		: false
 			}
 		}, {
-			tableName	: "flux"
+			tableName	: "medias"
 		})
 	);
 };
