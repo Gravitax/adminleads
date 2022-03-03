@@ -35,7 +35,7 @@ function	Navbar() {
 			<div className={"navbar_picto" + (classActive ? " active" : "")}
 				onClick={() => { setClassActive(classActive ? 0 : 1); }}>
 				<div className="navbar_collapse">
-					<Link to={`${gd.path_routes.account}?email=${user?.email}`}>
+					<Link to={`${gd.path_routes.update_users}?email=${user?.email}`}>
 						Account
 					</Link>
 					<span onClick={disconnect}>Disconnect</span>

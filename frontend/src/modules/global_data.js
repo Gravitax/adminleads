@@ -15,6 +15,7 @@ const	path_routes = {
 	"create_services"	: "/private/manager/services/create",
 	"users"				: "/private/manager/users",
 	"register"			: "/private/manager/users/create",
+	"update_users"		: "/private/manager/users/update",
 };
 
 const	roles = {

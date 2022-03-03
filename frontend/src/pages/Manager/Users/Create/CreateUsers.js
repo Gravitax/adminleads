@@ -29,6 +29,7 @@ function	CreateUsers() {
 		<div id="create_users">
 			<h1>Create Users</h1>
 			<form>
+
 				<input type="text" name="email" placeholder="Email" autoComplete="off"
 					onChange={(e) => setEmail(e.target.value)}
 				/>
@@ -46,9 +47,9 @@ function	CreateUsers() {
 					}
 				</select>
 				<button onClick={userCreation}>CREATE</button>
-				<div>
-					{creationStatus}
-				</div>
+				
+				<p>	{creationStatus} </p>
+
 			</form>
 		</div>
 	);

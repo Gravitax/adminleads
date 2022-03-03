@@ -35,7 +35,7 @@ function	Users() {
 	};
 
 	const	userUpdate = (email) => {
-		navigate(`${gd.path_routes.account}?email=${email}`);
+		navigate(`${gd.path_routes.update_users}?email=${email}`);
 	};
 
 	return (

@@ -26,13 +26,14 @@ function	CreateServices() {
 		<div id="create_services">
 			<h1>Create Services</h1>
 			<form>
+
 				<input type="text" name="name" placeholder="nom" autoComplete="off"
 					onChange={(e) => setName(e.target.value)}
 				/>
 				<button onClick={serviceCreation}>CREATE</button>
-				<div>
-					{creationStatus}
-				</div>
+
+				<p> {creationStatus} </p>
+
 			</form>
 		</div>
 	);

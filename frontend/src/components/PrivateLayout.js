@@ -7,8 +7,6 @@ import Home from "../pages/Home/Home";
 import Leads from "../pages/Leads/Leads";
 import Manager from "../pages/Manager/Manager";
 
-import Account from "../pages/Account/Account";
-
 import Medias from "../pages/Manager/Medias/Medias";
 import CreateMedias from "../pages/Manager/Medias/Create/CreateMedias";
 
@@ -20,6 +18,7 @@ import CreateServices from "../pages/Manager/Services/Create/CreateServices";
 
 import Users from "../pages/Manager/Users/Users";
 import CreateUsers from "../pages/Manager/Users/Create/CreateUsers";
+import UpdateUsers from "../pages/Manager/Users/Update/UpdateUsers";
 
 import { roles } from "../modules/global_data";
 
@@ -31,12 +30,12 @@ const	PrivateLayout = () => {
 			<Routes>
 				<Route path="/*" element={<AuthMiddleware />}>
 					<Route path="leads"		element={<Leads />} />
-					<Route path="account"	element={<Account />} />
 
 					{/* auth required routes */}
 					<Route path="manager/*" element={<AuthMiddleware allowedRoles={[roles.Admin, roles.Markus]} />}>
 						<Route path="users/*">
 							<Route path="create"	element={<CreateUsers />} />
+							<Route path="update"	element={<UpdateUsers />} />
 							<Route path="*"			element={<Users />} />
 						</Route>
 						<Route path="medias/*">

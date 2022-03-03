@@ -26,13 +26,14 @@ function	CreateMedias() {
 		<div id="create_medias">
 			<h1>Create Medias</h1>
 			<form>
+
 				<input type="text" name="name" placeholder="nom" autoComplete="off"
 					onChange={(e) => setName(e.target.value)}
 				/>
 				<button onClick={mediaCreation}>CREATE</button>
-				<div>
-					{creationStatus}
-				</div>
+				
+				<p> {creationStatus} </p>
+
 			</form>
 		</div>
 	);

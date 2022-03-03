@@ -1,7 +1,7 @@
 import Axios from "axios";
 import { useController } from "react-hook-form";
 
-import { regex_username } from "../../modules/functions";
+import { regex_username } from "../../../../modules/functions";
 
 
 const	user_already_in_use = (data, user, setError) => {

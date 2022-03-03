@@ -1,22 +1,21 @@
 import React, { useState, useEffect, useContext } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import Axios from "axios";
 import jwt_decode from "jwt-decode";
 import bcrypt from "bcryptjs";
 import { useForm } from "react-hook-form";
 
-import { extractParamsUrl } from "../../modules/functions";
-import AuthContext from "../../contexts/AuthContext";
-import * as gd from "../../modules/global_data";
+import AuthContext from "../../../../contexts/AuthContext";
+import { extractParamsUrl } from "../../../../modules/functions";
+import * as gd from "../../../../modules/global_data";
 import { Input, check_input } from "./Input";
 
-import "./Account.css";
+import "./UpdateUsers.css";
 
 
-function	Account() {
+function	UpdateUsers() {
 	const	token		= gd.auth.get();
 	const	location	= useLocation();
-	// const	navigate	= useNavigate();
 	const	get_params	= extractParamsUrl(location?.search);
 	
 	let		[email, setEmail]	= useState(get_params["email"] || token.email);
@@ -89,27 +88,25 @@ function	Account() {
 	}, []);
 
 	return (
-		<div className="account">
+		<div className="update_user">
 			<form onSubmit={handleSubmit(onSubmit)}>
 				<h3>{email}</h3>
 
 				<Input control={control} className="my_input" name="new_email" type="text" placeholder="new email"></Input>
 				{errors.new_email && <b className="error_message">{errors.new_email.message}</b>}
 
-				{ gd.auth.isAllowed([0, 1]) &&
-					<div className="my_input">
-						<select {...register("new_role")}>
-							<option value=""> Role </option>
-							{
-								Object.entries(gd.roles).map(([key, value]) => {
-									return (
-										<option value={value}> {key} </option>
-									);
-								})
-							}
-						</select>
-					</div>
-				}
+				<div className="my_input">
+					<select {...register("new_role")}>
+						<option value=""> Role </option>
+						{
+							Object.entries(gd.roles).map(([key, value]) => {
+								return (
+									<option value={value}> {key} </option>
+								);
+							})
+						}
+					</select>
+				</div>
 				{errors.new_role && <b className="error_message">{errors.new_role.message}</b>}
 
 				<Input control={control} className="my_input" name="new_password" type="password" placeholder="new password"></Input>
@@ -128,5 +125,5 @@ function	Account() {
 }
 
 	
-export default Account;
+export default UpdateUsers;
 	
