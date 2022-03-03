@@ -1,0 +1,32 @@
+#create_services {
+	display: flex; flex-direction: column;
+	justify-content: center; align-items: center;
+	width: 100%; height: calc(100vh - var(--navbarHeight));
+}
+
+#create_services h1 {
+	z-index: 1;
+	margin-bottom: -20px;
+	background: var(--blue);
+	padding: 0 10px;
+}
+
+#create_services form {
+	display: flex; flex-direction: column;
+	justify-content: center; align-items: center;
+	border: 1px solid black; border-radius: 15px;
+	padding: 30px; padding-top: 60px;
+}
+
+#create_services input, #create_services button, #create_services select {
+	width: 300px; height: 40px;
+	margin: 15px;
+	text-align: center;
+}
+
+#create_services button {
+	cursor: pointer;
+	margin-top: 30px;
+}
+
+#create_services input:focus { outline: none; }

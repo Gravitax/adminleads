@@ -6,7 +6,7 @@ import { regex_username } from "../../modules/functions";
 
 const	user_already_in_use = (data, user, setError) => {
 	return (
-		Axios.get(`/users/readOne/${data.new_email}`)
+		Axios.get(`/users/findOne/${data.new_email}`)
 			.then((response) => {
 				if (response.data.length > 0 || data.new_email === user.email) {
 					setError("new_email", { type : "manual", message : "new email is already in use", });

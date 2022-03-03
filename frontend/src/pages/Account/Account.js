@@ -42,10 +42,8 @@ function	Account() {
 						setUser(jwt_decode(response.data.token));
 					}
 					// si un nouveau email est enregistré on actualise celui reçu de base
-					if (data.new_email) {
-						// navigate(`${gd.path_routes.account}/?email=${data.new_email}`);
+					if (data.new_email)
 						setEmail(data.new_email);
-					}
 				}
 			});
 
@@ -88,7 +86,7 @@ function	Account() {
 				if (!response.data || response.data.length < 1)
 					setEmail(token.email);
 			});
-	}, [email, token]);
+	}, []);
 
 	return (
 		<div className="account">

@@ -1,32 +1,32 @@
-#register {
+#create_medias {
 	display: flex; flex-direction: column;
 	justify-content: center; align-items: center;
 	width: 100%; height: calc(100vh - var(--navbarHeight));
 }
 
-#register h1 {
+#create_medias h1 {
 	z-index: 1;
 	margin-bottom: -20px;
 	background: var(--blue);
 	padding: 0 10px;
 }
 
-#register form {
+#create_medias form {
 	display: flex; flex-direction: column;
 	justify-content: center; align-items: center;
 	border: 1px solid black; border-radius: 15px;
 	padding: 30px; padding-top: 60px;
 }
 
-#register input, #register button, #register select {
+#create_medias input, #create_medias button, #create_medias select {
 	width: 300px; height: 40px;
 	margin: 15px;
 	text-align: center;
 }
 
-#register button {
+#create_medias button {
 	cursor: pointer;
 	margin-top: 30px;
 }
 
-#register input:focus { outline: none; }
+#create_medias input:focus { outline: none; }

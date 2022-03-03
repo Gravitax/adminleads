@@ -2,16 +2,19 @@ import * as auth from "./auth";
 
 
 const	path_routes = {
-	"login"		: "/",
-	"home"		: "/private",
-	"leads"		: "/private/leads",
-	"account"	: "/private/account",
-	"manager"	: "/private/manager",
-	"medias"	: "/private/manager/medias",
-	"clients"	: "/private/manager/clients",
-	"services"	: "/private/manager/services",
-	"users"		: "/private/manager/users",
-	"register"	: "/private/manager/users/register",
+	"login"				: "/",
+	"home"				: "/private",
+	"leads"				: "/private/leads",
+	"account"			: "/private/account",
+	"manager"			: "/private/manager",
+	"medias"			: "/private/manager/medias",
+	"create_medias"		: "/private/manager/medias/create",
+	"clients"			: "/private/manager/clients",
+	"create_clients"	: "/private/manager/clients/create",
+	"services"			: "/private/manager/services",
+	"create_services"	: "/private/manager/services/create",
+	"users"				: "/private/manager/users",
+	"register"			: "/private/manager/users/create",
 };
 
 const	roles = {

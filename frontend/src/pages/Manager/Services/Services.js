@@ -1,39 +1,63 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Axios from "axios";
 
-import { regex_username } from "../../../modules/functions";
+import * as gd from "../../../modules/global_data";
 
 import "./Services.css";
 
 
 function	Services() {
-	const	[name, setName]						= useState("");
-	const	[creationStatus, setCreationStatus]	= useState("");
-	
-	const	serviceCreation = (e) => {
-		e.preventDefault();
-		if (!regex_username(name)) {
-			setCreationStatus("name is invalid");
-			return ;
-		}
-		Axios.post("/services/create", { name })
+	const	[servicesList, setServicesList] = useState([]);
+	const	navigate = useNavigate();
+
+	useEffect(() => {
+		Axios.get("/services/findAll")
 			.then((response) => {
-				setCreationStatus(response.data.message);
+				setServicesList(response.data);
 			});
+	}, []);
+
+	const	serviceDelete = (name) => {
+		// faire une demande de confirmation
+		Axios.delete(`/services/delete/${name}`);
+
+		// on actualise userList en supprimant l'email supprimé en database
+		let	tmp = [];
+
+		for (const [_, v] of Object.entries(servicesList)) {
+			if (v.name === name)
+				continue ;
+			tmp.push(v);
+		}
+		setServicesList(tmp);
+	};
+
+	const	serviceUpdate = (name) => {
+		// navigate(`${gd.path_routes.account}?email=${email}`);
+		console.log(name);
 	};
 
 	return (
+		
 		<div id="services">
-			<h1>Services</h1>
-			<form>
-				<input type="text" name="name" placeholder="nom" autoComplete="off"
-					onChange={(e) => setName(e.target.value)}
-				/>
-				<button onClick={serviceCreation}>Create</button>
-				<div>
-					{creationStatus}
-				</div>
-			</form>
+			<b className="create" onClick={() => navigate(gd.path_routes.create_services)}> Create Service </b>
+			<br /><br />
+			<b> Services list: </b>
+			<br /><br />
+			{
+				servicesList.map((value) => {
+					return (
+						<div className="serviceCard" key={value.name}>
+							<span className="serviceName"> {value.name} </span>
+							<span className="serviceControls">
+								<span onClick={() => serviceUpdate(value.name)}>update</span>
+								<span onClick={() => serviceDelete(value.name)}>delete</span>
+							</span>
+						</div>
+					);
+				})
+			}
 		</div>
 	);
 }

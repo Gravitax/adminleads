@@ -8,3 +8,46 @@ exports.findAll = (req, res, next) => {
 		})
 		.catch(() => res.status(500));
 };
+
+exports.findOne = (req, res, next) => {
+	const	name = req.params.name;
+
+	if (!name) return ;
+	db.Client.findOne({ where : { name : name } })
+		.then((reponse) => {
+			res.send(reponse);
+		})
+		.catch(() => res.status(500));
+};
+
+exports.delete = (req, res, next) => {
+	const	name = req.params.name;
+
+	if (!name) return ;
+	db.Client.destroy({ where : { name : name } })
+		.then((response) => {
+			res.send(response);
+		})
+		.catch(() => res.status(500));
+};
+
+exports.create = (req, res, next) => {
+	const	name = req.body.name;
+
+	if (!name) return ;
+	db.Client.findOne({ where : { name : name } })
+		.then((client) => {
+			// on verifie que l'user n'est pas déjà dans la DB
+			if (client?.name?.length > 0) {
+				res.json({ message: `client: " ${name} " already exist` });
+			}
+			else {
+				// si ce n'est pas le cas on peut l'insert
+				db.Client.create({
+					name	: name,
+				});
+				res.json({ message: `client: " ${name} "has been created.` });
+			}
+		})
+		.catch(() => res.status(500));
+};

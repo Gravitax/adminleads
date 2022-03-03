@@ -1,0 +1,27 @@
+#clients {
+	padding: 30px;
+}
+
+.clientCard {
+	display: flex; justify-content: space-between; align-items: center; font-size: 18px; margin-bottom: 15px;
+}
+
+.clientName { font-size: 120%; }
+.clientControls {
+	display: flex; justify-content: center; align-items: center;
+	margin-left: 30px;
+}
+.clientControls span {
+	padding: 5px; cursor: pointer;
+	margin-left: 2px;
+	background: rgba(255, 255, 255, 0.7);
+	color: var(--blue);
+}
+
+#clients .create {
+	width: 200px; height: 60px;
+	background-color: black; color: white;
+	font-size: 18px; font-weight: bold;
+	cursor: pointer;
+	display: flex; justify-content: center; align-items: center;
+}

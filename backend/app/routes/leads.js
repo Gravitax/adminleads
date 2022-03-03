@@ -11,7 +11,5 @@ router.get("/findQuery", mdlw_auth, ctrl_leads.findQuery);
 
 router.post("/update", mdlw_auth, ctrl_leads.update);
 
-router.get("/findAll", mdlw_auth, ctrl_leads.findAll);
-
 
 module.exports = router;
