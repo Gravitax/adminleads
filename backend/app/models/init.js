@@ -18,5 +18,9 @@ db.Media	= require("./Media")(db.Sequelize, db.sequelize);
 db.Client	= require("./Client")(db.Sequelize, db.sequelize);
 db.Service	= require("./Service")(db.Sequelize, db.sequelize);
 
+db.MediaService		= require("./MediaService")(db.Sequelize, db.sequelize, db.Media, db.Service);
+
+db.Media.belongsToMany(db.Service, { through : db.MediaService });
+
 
 module.exports = db;

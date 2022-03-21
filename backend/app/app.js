@@ -15,7 +15,12 @@ const	cors_options = {
 app.use(cors(cors_options));
 
 const	db = require("./models/init");
-db.sequelize.sync();
+db.sequelize.sync({ alter : true })
+	.then((data) => {
+		console.log(data);
+	})
+	.catch(e => console.log(e));
+// db.sequelize.sync();
 
 const	route_auth		= require("./routes/auth");
 const	route_leads		= require("./routes/leads");
