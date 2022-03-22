@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useState } from "react";
 import Axios from "axios";
 
 import { get_role } from "../modules/functions";

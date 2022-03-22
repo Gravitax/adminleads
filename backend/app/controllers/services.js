@@ -32,21 +32,24 @@ exports.delete = (req, res, next) => {
 };
 
 exports.create = (req, res, next) => {
-	const	name = req.body.name;
+	const	name = req.body.name, media = req.body.media, client = req.body.client;
 
-	if (!name) return ;
+	if (!name || !media || !client) return ;
 	db.Service.findOne({ where : { name : name } })
-		.then((service) => {
-			// on verifie que l'user n'est pas déjà dans la DB
+		.then(async (service) => {
+			// on verifie que le service n'est pas déjà dans la DB
 			if (service?.name?.length > 0) {
 				res.json({ message: `service: " ${name} " already exist` });
 			}
 			else {
 				// si ce n'est pas le cas on peut l'insert
-				db.Service.create({
-					name	: name,
-				});
-				res.json({ message: `service: " ${name} "has been created.` });
+				const	s	= await db.Service.create({ name, media, client });
+				const	c	= await db.Client.findOne({ where : { name : client } });
+				const	m	= await db.Media.findOne({ where : { name : media } });
+
+				await s.addClient(c);
+				await s.addMedia(m);
+				res.json({ message: `service: " ${name} " has been created.` });
 			}
 		})
 		.catch(() => res.status(500));

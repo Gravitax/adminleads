@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
 import { v4 as uuidv4 } from "uuid";
-import jwt_decode from "jwt-decode";
 
 import Checkbox from "./Checkbox/Checkbox";
 import Selected from "./Selected/Selected";

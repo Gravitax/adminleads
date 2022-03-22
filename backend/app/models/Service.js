@@ -10,6 +10,14 @@ module.exports = (Sequelize, sequelize) => {
 			name	: {
 				type			: Sequelize.STRING,
 				allowNull		: false
+			},
+			media	: {
+				type			: Sequelize.STRING,
+				allowNull		: false
+			},
+			client	: {
+				type			: Sequelize.STRING,
+				allowNull		: false
 			}
 		}, {
 			tableName	: "services"

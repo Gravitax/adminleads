@@ -25,7 +25,7 @@ function	Clients() {
 		// on actualise userList en supprimant l'email supprimé en database
 		let	tmp = [];
 
-		for (const [_, v] of Object.entries(clientsList)) {
+		for (const [, v] of Object.entries(clientsList)) {
 			if (v.name === name)
 				continue ;
 			tmp.push(v);

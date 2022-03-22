@@ -32,21 +32,25 @@ exports.delete = (req, res, next) => {
 };
 
 exports.create = (req, res, next) => {
-	const	name = req.body.name;
+	const	name = req.body.name, service = req.body.service;
 
 	if (!name) return ;
 	db.Client.findOne({ where : { name : name } })
-		.then((client) => {
+		.then(async (client) => {
 			// on verifie que l'user n'est pas déjà dans la DB
 			if (client?.name?.length > 0) {
 				res.json({ message: `client: " ${name} " already exist` });
 			}
 			else {
 				// si ce n'est pas le cas on peut l'insert
-				db.Client.create({
-					name	: name,
-				});
-				res.json({ message: `client: " ${name} "has been created.` });
+				const	c	= await db.Client.create({ name });
+
+				if (service) {
+					const	s = await db.Service.findOne({ where : { name : service } });
+
+					await c.addService(s);
+				}
+				res.json({ message: `client: " ${name} " has been created.` });
 			}
 		})
 		.catch(() => res.status(500));

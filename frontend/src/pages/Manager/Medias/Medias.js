@@ -25,7 +25,7 @@ function	Medias() {
 		// on actualise userList en supprimant l'email supprimé en database
 		let	tmp = [];
 
-		for (const [_, v] of Object.entries(mediasList)) {
+		for (const [, v] of Object.entries(mediasList)) {
 			if (v.name === name)
 				continue ;
 			tmp.push(v);

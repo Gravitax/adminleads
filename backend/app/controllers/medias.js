@@ -32,21 +32,25 @@ exports.delete = (req, res, next) => {
 };
 
 exports.create = (req, res, next) => {
-	const	name = req.body.name;
+	const	name = req.body.name, service = req.body.service;
 
 	if (!name) return ;
 	db.Media.findOne({ where : { name : name } })
-		.then((media) => {
-			// on verifie que l'user n'est pas déjà dans la DB
+		.then(async (media) => {
+			// on verifie que le media n'est pas déjà dans la DB
 			if (media?.name?.length > 0) {
 				res.json({ message: `media: " ${name} " already exist` });
 			}
 			else {
 				// si ce n'est pas le cas on peut l'insert
-				db.Media.create({
-					name	: name,
-				});
-				res.json({ message: `media: " ${name} "has been created.` });
+				const	m	= await db.Media.create({ name });
+
+				if (service) {
+					const	s = await db.Service.findOne({ where : { name : service } });
+
+					await m.addService(s);
+				}
+				res.json({ message: `media: " ${name} " has been created.` });
 			}
 		})
 		.catch(() => res.status(500));

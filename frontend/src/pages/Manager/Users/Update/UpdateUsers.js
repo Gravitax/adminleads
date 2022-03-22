@@ -85,7 +85,7 @@ function	UpdateUsers() {
 				if (!response.data || response.data.length < 1)
 					setEmail(token.email);
 			});
-	}, []);
+	}, [email, token]);
 
 	return (
 		<div className="update_user">
