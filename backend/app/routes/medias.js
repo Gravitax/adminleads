@@ -8,6 +8,7 @@ const	mdlw_auth	= require("../middlewares/auth");
 
 router.get("/findAll", mdlw_auth, ctrl_medias.findAll);
 router.get("/findOne/:name", mdlw_auth, ctrl_medias.findOne);
+router.get("/findServices/:name", mdlw_auth, ctrl_medias.findServices);
 
 router.delete("/delete/:name", mdlw_auth, ctrl_medias.delete);
 

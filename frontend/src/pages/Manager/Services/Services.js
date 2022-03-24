@@ -38,6 +38,10 @@ function	Services() {
 		console.log(name);
 	};
 
+	const	serviceInfo = (name) => {
+		navigate(`${gd.path_routes.info_services}?service=${name}`);
+	};
+
 	return (
 		
 		<div id="services">
@@ -51,6 +55,7 @@ function	Services() {
 						<div className="serviceCard" key={value.name}>
 							<span className="serviceName"> {value.name} </span>
 							<span className="serviceControls">
+								<span onClick={() => serviceInfo(value.name)}>info</span>
 								<span onClick={() => serviceUpdate(value.name)}>update</span>
 								<span onClick={() => serviceDelete(value.name)}>delete</span>
 							</span>

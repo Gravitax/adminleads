@@ -55,3 +55,12 @@ exports.create = (req, res, next) => {
 		})
 		.catch(() => res.status(500));
 };
+
+exports.findServices = (req, res, next) => {
+	const	name = req.params.name;
+
+	if (!name) return ;
+	db.Service.findAll({ where : { media : name } })
+		.then((response) => res.send(response))
+		.catch(() => res.status(500));
+};

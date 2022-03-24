@@ -38,6 +38,10 @@ function	Clients() {
 		console.log(name);
 	};
 
+	const	clientInfo = (name) => {
+		navigate(`${gd.path_routes.info_clients}?client=${name}`);
+	};
+
 	return (
 		
 		<div id="clients">
@@ -51,6 +55,7 @@ function	Clients() {
 						<div className="clientCard" key={value.name}>
 							<span className="clientName"> {value.name} </span>
 							<span className="clientControls">
+								<span onClick={() => clientInfo(value.name)}>info</span>
 								<span onClick={() => clientUpdate(value.name)}>update</span>
 								<span onClick={() => clientDelete(value.name)}>delete</span>
 							</span>

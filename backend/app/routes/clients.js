@@ -7,9 +7,10 @@ const	mdlw_auth		= require("../middlewares/auth");
 
 
 router.get("/findAll", mdlw_auth, ctrl_clients.findAll);
-router.get("/findOne/:email", mdlw_auth, ctrl_clients.findOne);
+router.get("/findOne/:name", mdlw_auth, ctrl_clients.findOne);
+router.get("/findServices/:name", mdlw_auth, ctrl_clients.findServices);
 
-router.delete("/delete/:email", mdlw_auth, ctrl_clients.delete);
+router.delete("/delete/:name", mdlw_auth, ctrl_clients.delete);
 
 router.post("/create", mdlw_auth, ctrl_clients.create);
 

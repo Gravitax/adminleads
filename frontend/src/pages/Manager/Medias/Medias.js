@@ -38,6 +38,10 @@ function	Medias() {
 		console.log(name);
 	};
 
+	const	mediaInfo = (name) => {
+		navigate(`${gd.path_routes.info_medias}?media=${name}`);
+	};
+
 	return (
 		
 		<div id="medias">
@@ -51,6 +55,7 @@ function	Medias() {
 						<div className="mediaCard" key={value.name}>
 							<span className="mediaName"> {value.name} </span>
 							<span className="mediaControls">
+								<span onClick={() => mediaInfo(value.name)}>info</span>
 								<span onClick={() => mediaUpdate(value.name)}>update</span>
 								<span onClick={() => mediaDelete(value.name)}>delete</span>
 							</span>
