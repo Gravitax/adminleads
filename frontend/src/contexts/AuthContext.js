@@ -7,7 +7,8 @@ import { auth } from "../modules/global_data";
 
 const	AuthContext = createContext({});
 
-const	auth_init = () => {
+const	auth_init = async () => {
+	// console.log("auth init");
 	const	{ token, dToken, isExp } = auth.data();
 
 	Axios.defaults.baseURL = "https://api.admin-lead.agence-markus.com";
@@ -15,6 +16,9 @@ const	auth_init = () => {
 		auth.remove();
 	}
 	else if (dToken) {
+		// const	refreshToken = await Axios.get(`/users/findOne/${dToken.email}`)
+		// 	.then((response) => response?.data);
+
 		auth.set(token);
 	}
 };
@@ -22,7 +26,7 @@ const	auth_init = () => {
 export const	AuthProvider = ({ children }) => {
 	auth_init();
 	const	token			= auth.get();
-	const	[user, setUser] = useState(token);
+	const	[user, setUser]	= useState(token);
 
 	return (
 		<AuthContext.Provider value={{

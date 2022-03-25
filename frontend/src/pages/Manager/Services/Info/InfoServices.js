@@ -27,12 +27,14 @@ function	InfoServices() {
 	}, [service]);
 
 	return (
-		<div>
+		<div id="infoServices">
 			Service's name : {service.name}
 			<br />
 			Media : {service.media}
 			<br />
 			Client : {service.client}
+			<br /><br />
+			<span className="btn_back" onClick={() => navigate(-1)}>BACK</span>
 		</div>
 	);
 }

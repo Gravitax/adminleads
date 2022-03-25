@@ -1,3 +1,21 @@
 #infoMedias {
 	padding: 30px;
 }
+
+.service_line {
+	width: 100%;
+	display: flex; justify-content: space-between; align-items: center;
+	margin-bottom: 5px;
+}
+
+.service_line > span {
+	display: flex; justify-content: center; align-items: center; gap: 5px;
+}
+
+.service_line > span > span {
+	background-color: white;
+	color: black;
+	font-size: 11px;
+	cursor: pointer;
+	padding: 10px;
+}

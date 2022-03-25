@@ -1,0 +1,10 @@
+#infoServices {
+	padding: 30px;
+}
+
+.btn_back {
+	font-size: 11px;
+	padding: 10px;
+	background-color: white; color: black;
+	cursor: pointer;
+}

@@ -8,7 +8,7 @@ const	mdlw_auth	= require("../middlewares/auth");
 
 
 router.get("/findAll", mdlw_auth, ctrl_users.findAll);
-router.get("/findOne/:email", mdlw_auth, ctrl_users.findOne);
+router.get("/findOne/:email", ctrl_users.findOne);
 
 router.delete("/delete/:email", mdlw_auth, ctrl_users.delete);
 
